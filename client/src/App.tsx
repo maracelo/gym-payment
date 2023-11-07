@@ -2,11 +2,10 @@ import RouteList from "./RouteList";
 import Header from './components/partials/Header';
 import Footer from './components/partials/Footer';
 import MainContainer from './components/MainContainer';
-import { useSelector } from "react-redux";
-import { RootState } from "./redux/store";
+import useAppSelector from "./redux/typedUseSelectorHook";
 
 function App() {
-    const darkState = useSelector((state: RootState) => state.darkMode);
+    const darkState = useAppSelector((state) => state.darkMode);
 
     const style = {
         backgroundColor: darkState.dark ? '#05172b' : '#4186D3',

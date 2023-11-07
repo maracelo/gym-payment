@@ -1,11 +1,11 @@
 import { useState } from 'react';
 import { Title, Header as HeaderS, Dark } from './styled';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { setDarkMode } from '../../../redux/reducers/darkModeReducer';
-import { RootState } from '../../../redux/store';
+import useAppSelector from '../../../redux/typedUseSelectorHook';
 
 function Header(){
-    const darkState = useSelector((state: RootState) => state.darkMode);
+    const darkState = useAppSelector((state) => state.darkMode);
     const [dark, setDark] = useState<boolean>(darkState.dark);
     const dispatch = useDispatch();
 
