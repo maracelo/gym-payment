@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
-import User from "../models/User";
 import validator from "validator";
+
+import User from "../models/User";
+
 import phoneValidator from "../helpers/phoneValidator";
+import planValidator from "../helpers/planValidator";
 
 export async function getAll(req: Request, res: Response){
     try{
@@ -36,16 +39,15 @@ export async function create(req: Request, res: Response){
 
     if(!email || !validator.isEmail(email)) return res.status(400).json({err: 'invalid email'});
 
-    const planVal = ['normal', 'vip'];
-
-    if(!plan && !planVal.includes(plan)) return res.status(400).json({err: 'invalid plan'});
+    if(!plan && !planValidator(plan)) return res.status(400).json({err: 'invalid plan'});
 
     let filteredPhone = null;
 
     if(phone){
         filteredPhone = phoneValidator(phone ?? '');
-        if(!filteredPhone)return res.status(400).json({err: 'invalid phone'});
-    } 
+
+        if(!filteredPhone) return res.status(400).json({err: 'invalid phone'});
+    }
 
     try{
         const user = await User.create({ name, email, plan, phone: filteredPhone ?? null });
@@ -79,7 +81,7 @@ export async function update(req: Request, res: Response){
 
     if(name && name !== user.name && name.length > 2) updateFields.name = name;
 
-    if(plan && plan !== user.plan && (['normal', 'vip'].includes(plan))) updateFields.plan = plan;
+    if(plan && plan !== user.plan && planValidator(plan)) updateFields.plan = plan;
 
     if(phone){
         const filteredPhone = phoneValidator(phone);
