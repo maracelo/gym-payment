@@ -4,23 +4,24 @@ import * as AdminController from "../controllers/AdminController";
 
 const router = Router();
 
-router.get('/ping', (req: Request, res: Response) => res.json({pong: 'ok'}))
+router.get('/ping', (req: Request, res: Response) => res.json({pong: 'ok'}));
 
+// TODO middleware to test if is admin is logged
 router.post('/login', AdminController.login);
+router.post('/register', AdminController.create);
+
+// router.use('/admin', [ /* middleware */ ]);
+
+router.get('/admin/:id', AdminController.get);
+router.put('/admin/:id', AdminController.update);
+router.delete('/amdin/:id', AdminController.del);
 
 // router.use('/user', [ /* middleware */ ]);
- 
+
 router.get('/user', UserController.getAll);
 router.get('/user/:id', UserController.get);
 router.post('/user', UserController.create);
 router.put('/user/:id', UserController.update);
 router.delete('/user/:id', UserController.del);
-
-// router.use('/admin', [ /* middleware */ ]);
-
-router.get('/admin/:id', AdminController.get);
-router.post('/admin', AdminController.create);
-router.put('/admin/:id', AdminController.update);
-router.delete('/amdin/:id', AdminController.del);
 
 export default router;
