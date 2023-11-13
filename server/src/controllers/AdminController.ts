@@ -1,4 +1,4 @@
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import validator from "validator";
 
@@ -11,7 +11,7 @@ import passwordValidator from "../helpers/passwordValidator";
 export async function login(req: Request, res: Response){
     const { email, password } = req.body;
 
-    if(!email || password) return res.status(400).json({err: 'field lefting'});
+    if(!email || !password) return res.status(400).json({err: 'field lefting'});
 
     if(!validator.isEmail(email)) return res.status(400).json({err: 'invalid email or password'});
     
@@ -122,8 +122,7 @@ export async function update(req: Request, res: Response){
             return res.status(400)
                 .json({err: 'password need at least 8 characters, 1 digit, 1 upper and lowercase and max 100 characters'});
         }
-        const hash = bcrypt.hashSync(new_password, 10);
-        updateFields.password = hash;
+        updateFields.password = bcrypt.hashSync(new_password, 10);
     }
 
     if(updateFields){
