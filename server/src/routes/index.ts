@@ -18,7 +18,7 @@ router.delete('/amdin/:id', AdminController.del);
 
 // router.use('/user', [ /* middleware */ ]);
 
-router.get('/user', UserController.getAll);
+router.get('/users', UserController.getAll);
 router.get('/user/:id', UserController.get);
 router.post('/user', UserController.create);
 router.put('/user/:id', UserController.update);
