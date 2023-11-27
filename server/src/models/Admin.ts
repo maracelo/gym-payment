@@ -1,6 +1,6 @@
 import { Schema, Model, model, connection } from "mongoose";
 
-type AdminType = {
+export type AdminType = {
     name: string,
     email: string,
     phone: string|null,

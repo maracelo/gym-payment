@@ -4,21 +4,21 @@ import validator from "validator";
 
 import Admin from '../models/Admin';
 
-import phoneValidator from "../helpers/phoneValidator";
 import generateToken from "../helpers/generateToken";
-import passwordValidator from "../helpers/passwordValidator";
+import filterAdminDataUpdate from "../helpers/filterAdminDataUpdate";
+import filterAdminDataCreate from "../helpers/filterAdminDataCreate";
 
 export async function login(req: Request, res: Response){
     const { email, password } = req.body;
 
-    if(!email || !password) return res.status(400).json({err: 'field lefting'});
+    if(!email || !password) return res.status(400).json({err: 'Field lefting'});
 
-    if(!validator.isEmail(email)) return res.status(400).json({err: 'invalid email or password'});
+    if(!validator.isEmail(email)) return res.status(400).json({err: 'Invalid email or password'});
     
     const admin = await Admin.findOne({email});
 
     if(!admin || !password && bcrypt.compareSync(password, admin.password))
-        return res.status(400).json({err: 'invalid email or password'});
+        return res.status(400).json({err: 'Invalid email or password'});
 
     const token = generateToken(admin.id);
 
@@ -31,111 +31,69 @@ export async function get(req: Request, res: Response){
     if(id){
         try{
             const admin = await Admin.findOne({_id: id});
+            
             if(admin) return res.json(admin);
+
+            return res.status(404).json({err: 'Admin not found'});
         }catch(err){
             console.log(err);
-            return res.status(500).json({err: 'system error'});
+            return res.status(500).json({err: 'System error'});
         }
     }
-
-    res.json({err: 'admin not found'});
 }
 
 export async function create(req: Request, res: Response){
-    const { 
-        name,
-        email,
-        phone,
-        password,
-        password_confirmation,
-        profile_pic,
-    } = req.body;
+   const newAdminFields = await filterAdminDataCreate(req.body);
 
-    if(!name || name.length < 2) return res.status(400).json({err: 'invalid name'});
-
-    if(!email && !validator.isEmail(email)) return res.status(400).json({err: 'invalid email'});
-
-    let filteredPhone = null;
-
-    if(phone){
-        filteredPhone = phoneValidator(phone);
-
-        if(!filteredPhone) return res.status(400).json({err: 'invalid phone number'});
-    }
-
-    if(!password || !passwordValidator(password) || password !== password_confirmation){
-        return res.status(400)
-            .json({err: 'password need at least 8 characters, 1 digit, 1 upper and lowercase and max 100 characters'});
-    }
-
-    const hash = bcrypt.hashSync(password, 10);
+   if('err' in newAdminFields) return res.status(400).json({err: newAdminFields.err});
 
     try{
-        const admin = await Admin.create({
-            name,
-            email,
-            phone: filteredPhone ?? null,
-            password: hash,
-        });
+        const admin = await Admin.create(newAdminFields);
+
         if(admin){
             const token = generateToken({id: admin.id});
             return res.status(201).json({token});
         }
     }catch(err){
         console.log(err);
-        return res.status(500).json({err: 'system error'});
+        return res.status(500).json({err: 'System error'});
     }
 
-    res.json({err: 'admin not created'});
+    res.json({err: 'Admin not created'});
 }
 
-type updateFields = { name?: string, email?: string, phone?: string, password?: string }
+type updateFields = {
+    name?: string,
+    email?: string,
+    phone?: string,
+    password?: string
+};
 
 export async function update(req: Request, res: Response){
     const id = req.params.id;
     
-    if(!id) return res.status(400).json({err: 'id not sent'});
+    if(!id) return res.status(400).json({err: 'Id not sent'});
     
     const admin = await Admin.findOne({_id: id});
     
-    if(!admin) return res.status(400).json({err: 'admin doesn\'t exist'});
+    if(!admin) return res.status(404).json({err: 'Admin not found'});
     
-    const {name, phone, new_password, current_password} = req.body;
-    let updateFields: updateFields = {};
+    const updateFields = await filterAdminDataUpdate(req.body, admin);
 
-    if(name){
-        if(name.length < 2) return res.status(400).json({err: 'invalid name'}); // TODO a change email option
-        updateFields.name = name;
-    } 
+    if('err' in updateFields) return res.status(400).json({err: updateFields.err});
 
-    if(phone){
-        const filteredPhone = phoneValidator(phone);
-        if(filteredPhone) updateFields.phone = filteredPhone;
-    }
+    if(Object.keys(updateFields).length > 0){
 
-    if(new_password && current_password){
-        if(
-            !passwordValidator(new_password) || !passwordValidator(current_password) 
-            || new_password !== current_password 
-            || !bcrypt.compareSync(current_password, admin.password)
-        ){
-            return res.status(400)
-                .json({err: 'password need at least 8 characters, 1 digit, 1 upper and lowercase and max 100 characters'});
-        }
-        updateFields.password = bcrypt.hashSync(new_password, 10);
-    }
-
-    if(updateFields){
         try{
             const updatedAdmin = await Admin.findOneAndUpdate({_id: id}, updateFields, {new: true});
             if(updatedAdmin) return res.json(updatedAdmin);
         }catch(err){
             console.log(err);
-            res.status(500).json({err: 'system error'});
+            res.status(500).json({err: 'System error'});
         }
     }
 
-    res.json({err: 'admin not Updated'});
+    res.json({err: 'Admin not updated'});
 }
 
 export async function del(req: Request, res: Response){
@@ -144,12 +102,12 @@ export async function del(req: Request, res: Response){
     if(id){
         try{
             const admin = await Admin.findOneAndDelete({_id: id});
-            if(admin) return res.json({success: 'admin deleted'});
+            if(admin) return res.json({success: 'Admin deleted'});
         }catch(err){
             console.log(err);
-            return res.status(500).json({err: 'system error'})
+            return res.status(500).json({err: 'System error'})
         }
     }
 
-    res.json({err: 'user not deleted'});
+    res.json({err: 'Admin not deleted'});
 }

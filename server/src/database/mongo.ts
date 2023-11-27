@@ -1,9 +1,9 @@
-import { connect } from "mongoose";
+import mongoose, { connect, disconnect } from "mongoose";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-async function MongoConnect(){
+export async function MongoConnect(){
     try{
         console.log('Connecting to Mongo...');
         
@@ -28,4 +28,24 @@ async function MongoConnect(){
     }
 }
 
-export default MongoConnect;
+export async function MongoClear(){
+    try{
+        const collections = mongoose.connection.collections;
+
+        for(let i in collections){ await collections[i].deleteMany({}) }
+    }catch(err){
+        console.log(`Failed to clear: ${err}`);
+    }
+}
+
+export async function MongoDisconnect(){
+    try{
+        console.log('Disconnecting to Mongo...');
+
+        await disconnect();
+
+        console.log('Disconnected to Mongo');
+    }catch(err){
+        console.log(`Failed to disconnect: ${err}`)
+    }
+}

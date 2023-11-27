@@ -15,7 +15,7 @@ app.use( express.urlencoded({ extended: true }) );
 app.use('/api', mainRoutes);
 
 app.use((req: Request, res: Response) =>{
-    res.status(404).json({err: 'Not found'});
+    res.status(404).json({err: 'Route not found'});
 });
 
 export default app;
