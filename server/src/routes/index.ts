@@ -14,11 +14,11 @@ router.post('/register', AdminController.create);
 
 router.get('/admin/:id', AdminController.get);
 router.put('/admin/:id', AdminController.update);
-router.delete('/amdin/:id', AdminController.del);
+router.delete('/admin/:id', AdminController.del);
 
 // router.use('/user', [ /* middleware */ ]);
 
-router.get('/user', UserController.getAll);
+router.get('/users', UserController.getAll);
 router.get('/user/:id', UserController.get);
 router.post('/user', UserController.create);
 router.put('/user/:id', UserController.update);
