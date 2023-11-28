@@ -15,11 +15,11 @@ function MainRoutes(){
     useRoutes([
       {path: '/', element: <Home />},
 
-      {path: '/user', element: <User />},
+      {path: '/user/:id', element: <User />},
       {path: '/user/login', element: <UserLogin />},
       {path: '/user/register', element: <UserRegister />},
 
-      {path: '/admin', element: <Admin />},
+      {path: '/admin/:id', element: <Admin />},
       {path: '/admin/login', element: <AdminLogin />},
       {path: '/admin/register', element: <AdminRegister />},
     ])
