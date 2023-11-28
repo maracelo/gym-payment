@@ -5,21 +5,21 @@ import { setDarkMode } from '../../../redux/reducers/darkModeReducer';
 import useAppSelector from '../../../redux/typedUseSelectorHook';
 
 function Header(){
-    const darkState = useAppSelector((state) => state.darkMode);
-    const [dark, setDark] = useState<boolean>(darkState.dark);
-    const dispatch = useDispatch();
+  const darkState = useAppSelector((state) => state.darkMode);
+  const [dark, setDark] = useState<boolean>(darkState.dark);
+  const dispatch = useDispatch();
 
-    function handleTheme(){
-        dispatch( setDarkMode(darkState.dark ? 'light' : 'dark') )
-        setDark(dark ? false : true);
-    }
+  function handleTheme(){
+    dispatch( setDarkMode(darkState.dark ? 'light' : 'dark') )
+    setDark(dark ? false : true);
+  }
 
-    return (
-        <HeaderS>
-            <Title>GYM</Title>
-            <Dark onClick={handleTheme} src={import.meta.env.VITE_BASE_URL + `public/assets/images/${dark ? 'dark' : 'light'}.png`} />
-        </HeaderS>
-    );
+  return (
+    <HeaderS>
+      <Title>GYM</Title>
+      <Dark onClick={handleTheme} src={import.meta.env.VITE_BASE_URL + `public/assets/images/${dark ? 'dark' : 'light'}.png`} />
+    </HeaderS>
+  );
 }
 
 export default Header;

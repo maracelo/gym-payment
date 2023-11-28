@@ -1,4 +1,3 @@
-import React from 'react';
 import { useRoutes } from 'react-router-dom';
 
 import Home from './pages/Home';
@@ -12,19 +11,19 @@ import AdminLogin from './pages/Auth/Admin/Login';
 import AdminRegister from './pages/Auth/Admin/Register';
 
 function MainRoutes(){
-    return(
-        useRoutes([
-            {path: '/', element: <Home />},
+  return(
+    useRoutes([
+      {path: '/', element: <Home />},
 
-            {path: '/user', element: <User />},
-            {path: '/user/login', element: <UserLogin />},
-            {path: '/user/register', element: <UserRegister />},
+      {path: '/user', element: <User />},
+      {path: '/user/login', element: <UserLogin />},
+      {path: '/user/register', element: <UserRegister />},
 
-            {path: '/admin', element: <Admin />},
-            {path: '/admin/login', element: <AdminLogin />},
-            {path: '/admin/register', element: <AdminRegister />},
-        ])
-    );
+      {path: '/admin', element: <Admin />},
+      {path: '/admin/login', element: <AdminLogin />},
+      {path: '/admin/register', element: <AdminRegister />},
+    ])
+  );
 }
 
 export default MainRoutes;
