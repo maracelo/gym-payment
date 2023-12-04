@@ -6,6 +6,7 @@ export const Footer = styled.footer`
   align-items: center;
   padding-top: 20px;
   border-top: 2px solid #fff;
+  z-index: 0;
 `;
 
 export const Links = styled.img`
