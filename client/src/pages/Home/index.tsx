@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 import { Container, List, User } from './styled';
-import { Section } from '../../components/Section/styled';
+import Area from '../../components/Area';
 import AddForm from '../../components/AddForm';
 
 function Home(){
@@ -11,6 +11,8 @@ function Home(){
     {_id: '2', name: 'Test2', "payment-status": 'payed'},
     {_id: '3', name: 'Test3', "payment-status": 'payed'},
     {_id: '4', name: 'Test4', "payment-status": 'late'},
+    {_id: '5', name: 'Test5', "payment-status": 'late'},
+    {_id: '5', name: 'Test5', "payment-status": 'late'},
   ]
 
   const lateList = [
@@ -22,7 +24,7 @@ function Home(){
 
   return (
     <Container>
-      <Section>
+      <Area>
         <h1>TODAY</h1>
 
         <List>
@@ -38,9 +40,9 @@ function Home(){
             ))}
           </ul>
         </List>
-      </Section>
+      </Area>
       
-      <Section>
+      <Area>
         <h1>LATE</h1>
 
         <List>
@@ -56,13 +58,13 @@ function Home(){
             ))}
           </ul>
         </List>
-      </Section>
+      </Area>
 
-      <Section>
+      <Area>
         <h1>ADD</h1>
 
         <AddForm />
-      </Section>
+      </Area>
     </Container>
   );
 }

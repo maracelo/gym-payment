@@ -9,7 +9,7 @@ export const Header = styled.header`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   border-bottom: 2px solid #fff
 `;
 

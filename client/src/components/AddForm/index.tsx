@@ -3,7 +3,7 @@ import { Container } from './styled';
 function AddForm(){
   return (
     <Container>
-      <img src="http://localhost:3000/public/assets/images/default.png" alt="Default Profile Image" />
+      {/* <img src="http://localhost:3000/public/assets/images/default.png" alt="Default Profile Image" /> */}
 
       <form action="">
         <input type="text" name="name" placeholder="Name" />

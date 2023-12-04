@@ -16,15 +16,13 @@ function App() {
   };
 
   return (
-    <div style={style}>
-      <MainContainer dark={darkState.dark}>
-        <Header />
-        <div className="container">
-          <RouteList />
-        </div>
-        <Footer />
-      </MainContainer>
-    </div>
+    <MainContainer dark={darkState.dark}>
+      <Header />
+      <div className="container">
+        <RouteList />
+      </div>
+      <Footer />
+    </MainContainer>
   );
 }
 

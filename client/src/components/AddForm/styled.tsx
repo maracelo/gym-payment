@@ -5,10 +5,10 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 75%;
+  height: calc(100% - 53px);
   
   img{
-    width: 30%;
+    width: 40px;
     height: auto;
     clip-path: circle(50% at 50% 50%);
   }
@@ -17,6 +17,7 @@ export const Container = styled.div`
     display: flex;
     flex-direction: column;
     margin: 10px;
+    width: 60%;
 
     input{
       margin-bottom: 10px;
@@ -24,8 +25,10 @@ export const Container = styled.div`
     }
 
     input[type=checkbox]{
+      display: flex;
+      align-items: center;
+      margin: 0;
       margin-right: 5px;
-      margin-bottom: 0;
     }
 
     label{
@@ -54,24 +57,44 @@ export const Container = styled.div`
       border-radius: 0px;
     }
 
-    @media(max-width: 720px){
-      &{
-        width: 100%;
+    @media(max-width: 1100px){
+      button{
+        font-size: 15px;
       }
-
+    }
+    
+    @media(max-width: 720px){
+      width: 100%;
+      
       input{
-        margin-bottom: 5px;
+        margin-bottom: 8px;
         padding: 5px;
-        /* width: 100%; */
       }
 
       label{
         font-size: 12px;
-        margin-bottom: 5px;
+        margin-bottom: 8px;
+      }
+    }
+
+    @media(max-width: 400px){
+      input{
+        padding: 5px;
+        font-size: 12px;
       }
 
       button{
-        font-size: 15px;
+        font-size: 14px;
+      }
+    }
+
+    @media(min-height: 1500px){
+      input{
+        font-size: 20px;
+      }
+
+      button{
+        font-size: 22px;
       }
     }
   }
