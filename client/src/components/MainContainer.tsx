@@ -28,7 +28,7 @@ const MainContainer = styled.div<Props>`
     height: 100%;
     left: 0;
     top: 0;
-    z-index: 1;
+    z-index: -1;
     background-color: ${(props) => props.dark ? '#091d3bb9' : '#30538bb8'};
   }
 
