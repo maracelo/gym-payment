@@ -6,16 +6,30 @@ export const Container = styled.div`
   gap: 10px;
   height: 100%;
 
-  @media(max-width: 720px){
+  @media(max-width: 800px){
+    grid-template-columns: repeat(1, 1fr);
+  }
+
+  @media(min-height: 1000px) and (max-width: 1200px){ // get to know how to put 2 if in media
     grid-template-columns: repeat(1, 1fr);
   }
 `;
 
 export const List = styled.div`
   color: #fff;
-
+  overflow-y: auto;
+  max-height: 300px;
+  
   ul{
     list-style-type: none;
+  }
+  
+  @media(min-height: 1500px){
+    max-height: 1500px;
+  }
+
+  @media(min-height: 1000px){
+    max-height: 1000px;
   }
 `;
 
@@ -25,7 +39,7 @@ export const User = styled.li<UserProps>`
   border-right: 1px solid #fff;
   border-bottom: 1px solid #fff;
   padding: 5px;
-  margin: 5px 0;
+  margin: 5px;
   transition: .5s;
 
   &:hover{
@@ -63,6 +77,19 @@ export const User = styled.li<UserProps>`
         width: 35px;
         height: 35px;
       }
+    }
+
+    @media(max-width: 400px){
+      font-size: 11px;
+
+      img{
+        width: 30px;
+        height: auto;
+      }
+    }
+
+    @media(min-height: 1500px){
+      font-size: 22px;
     }
   }
 `;

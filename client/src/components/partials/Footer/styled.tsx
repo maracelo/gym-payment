@@ -1,10 +1,5 @@
 import styled from 'styled-components';
 
-export const Title = styled.h1`
-  font-size: 70px;
-  color: #fff;
-`;
-
 export const Footer = styled.footer`
   display: flex;
   justify-content: center;
