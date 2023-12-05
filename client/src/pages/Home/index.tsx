@@ -12,7 +12,7 @@ function Home(){
     {_id: '3', name: 'Test3', "payment-status": 'payed'},
     {_id: '4', name: 'Test4', "payment-status": 'late'},
     {_id: '5', name: 'Test5', "payment-status": 'late'},
-    {_id: '5', name: 'Test5', "payment-status": 'late'},
+    {_id: '6', name: 'Test6', "payment-status": 'late'},
   ]
 
   const lateList = [
