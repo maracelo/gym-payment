@@ -40,7 +40,7 @@ export const Container = styled.div`
     }
   
     button{
-      background-color: #5c7ada;
+      background-color: #2c60a5;
       color: #fff;
       font-weight: bold;
       font-size: 20px;
