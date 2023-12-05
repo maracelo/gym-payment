@@ -4,7 +4,9 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  height: 100%;
+  height: fit-content;
+  justify-content: center;
+  align-items: center;
 
   @media(max-width: 800px){
     grid-template-columns: repeat(1, 1fr);
@@ -64,12 +66,18 @@ export const User = styled.li<UserProps>`
 
     p{
       display: flex;
+      align-items: center;
       font-weight: bold;
     }
 
     span{
       font-weight: bold;
       color: ${(props) => props.status === 'late' ? '#f00' : '#0f0'};
+      border: 1px solid;
+      border-color: ${(props) => props.status === 'late' ? '#f00' : '#0f0'};
+      background-color: ${(props) => props.status === 'late' ? '#ff000030' : '#00ff0030'};
+      padding: 5px;
+      border-radius: 10px;
     }
 
     @media(max-width: 1100px){
