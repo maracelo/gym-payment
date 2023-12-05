@@ -5,13 +5,13 @@
   z-index: 1;
 }
 
-html, body, #root>div{
+html, body, #root{
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
 
 #root{
-  height: 100%;
   display: flex;
   justify-content: center;
   background-color: #081d35;
@@ -22,10 +22,6 @@ html, body, #root>div{
     overflow-y: scroll;
     z-index: 1;
     position: relative;
-  }
-
-  #root{
-    height: fit-content;
   }
 }
 

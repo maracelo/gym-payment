@@ -1,4 +1,4 @@
 .container{
     padding: 10px;
-    /* height: calc(100% - 200px); */
+    min-height: fit-content;
 }
