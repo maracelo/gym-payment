@@ -8,13 +8,6 @@ import "./App.css";
 function App() {
   const darkState = useAppSelector((state) => state.darkMode);
 
-  const style = {
-    backgroundColor: darkState.dark ? '#05172b' : '#4186D3',
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-  };
-
   return (
     <MainContainer dark={darkState.dark}>
       <Header />

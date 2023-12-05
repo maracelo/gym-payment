@@ -3,21 +3,23 @@ import { useRoutes } from 'react-router-dom';
 import Home from './pages/Home';
 
 import User from './pages/Profile/User';
-import UserLogin from './pages/Auth/User/Login';
-import UserRegister from './pages/Auth/User/Register';
+// import UserLogin from './pages/Auth/User/Login';
+// import UserRegister from './pages/Auth/User/Register';
 
 import Admin from './pages/Profile/Admin';
 import AdminLogin from './pages/Auth/Admin/Login';
 import AdminRegister from './pages/Auth/Admin/Register';
 
+import E404 from './pages/E404';
+
 function MainRoutes(){
   return(
     useRoutes([
+      {path: '*', element: <E404 />},
+
       {path: '/', element: <Home />},
 
       {path: '/user/:id', element: <User />},
-      {path: '/user/login', element: <UserLogin />},
-      {path: '/user/register', element: <UserRegister />},
 
       {path: '/admin/:id', element: <Admin />},
       {path: '/admin/login', element: <AdminLogin />},

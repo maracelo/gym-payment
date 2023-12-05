@@ -10,8 +10,8 @@ function Header(){
   const dispatch = useDispatch();
 
   function handleTheme(){
-    dispatch( setDarkMode(darkState.dark ? 'light' : 'dark') )
-    setDark(dark ? false : true);
+    dispatch( setDarkMode(!darkState.dark) )
+    setDark(!dark);
   }
 
   return (

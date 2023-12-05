@@ -6,6 +6,7 @@ export const Container = styled.div`
   justify-content: center;
   align-items: center;
   padding: 20px;
+  height: 100%;
 
   .userInfo{
     background-color: #00000075;

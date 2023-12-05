@@ -5,6 +5,7 @@ export const Sec = styled.section`
   border: 2px solid #fff;
   width: auto;
   height: 100%;
+  max-height: 500px;
 
   h1{
     font-size: 40px;
