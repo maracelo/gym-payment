@@ -12,13 +12,13 @@ const MainContainer = styled.div<Props>`
   height: 100%;
   max-width: 2000px;
   padding: 20px 40px;
-  z-index: 1;
   background-color: ${(props) => props.dark ? '#081d35' : '#4186D3'};
   background-image: url(${import.meta.env.VITE_BASE_URL + 'public/assets/images/background.jpg'});
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
   background-repeat: no-repeat;
+  z-index: 1;
   
   &:before{
     content: "";
@@ -30,6 +30,10 @@ const MainContainer = styled.div<Props>`
     top: 0;
     z-index: -1;
     background-color: ${(props) => props.dark ? '#091d3bb9' : '#30538bb8'};
+  }
+
+  @media(max-width: 800px){
+    height: fit-content;
   }
 
   @media(max-width: 400px){
