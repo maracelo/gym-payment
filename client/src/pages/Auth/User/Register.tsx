@@ -4,8 +4,6 @@ import { Link } from 'react-router-dom';
 import useAppSelector from '../../../redux/typedUseSelectorHook';
 
 function UserRegister(){
-  const { dark } = useAppSelector((state) => state.darkMode);
-
   return (
     <Container>
       <Form>
@@ -16,7 +14,7 @@ function UserRegister(){
         <PasswordInput name='password' placeholder='Password' />
         <PasswordInput name='confirm_password' placeholder='Confirm Password' />
 
-        <PassOption dark={dark}>
+        <PassOption>
           Already have an account? <Link to={import.meta.env.VITE_BASE_URL + 'user/login'}>Click here.</Link>
         </PassOption>
       </Form>

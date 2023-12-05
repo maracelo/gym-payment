@@ -5,22 +5,35 @@ export const Container = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: calc(100% - 160px);
+  height: 100%;
 `;
 
 export const Title = styled.h1`
-  font-size: 5vh;
+  font-size: 50px;
   color: #fff;
   padding: 0;
   margin: 0;
+
+  @media(max-width: 800px){
+    font-size: 40px;
+  }
+
+  @media(max-width: 400px){
+    font-size: 30px;
+  }
 `;
 
 export const Form = styled.form`
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
   border: 2px solid #fff;
   padding: 20px;
+  min-height: fit-content;
+  width: 50%;
+  min-width: fit-content;
+  max-width: 500px;
 
   label{
     display: flex;
@@ -37,19 +50,33 @@ export const Form = styled.form`
     
   input{
     width: 100%;
-    font-size: 20px;
-    margin: 20px 0;
+    font-size: 15px;
+    margin: 10px 0;
     padding: 10px;
   }
 
-  @media(max-height: 700px){
+  p{
+    font-size: 16px;
+  }
+
+  button{
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    background-color: #2c60a5;
+    color: #fff;
+    font-size: 15px;
+    font-weight: bold;
+    border: none;
+    outline: none;
+  }
+
+  @media(max-height: 800px){
     padding: 12px;
 
-    input{
-      font-size: 11px;
-      margin: 10px 0;
+    input, button{
+      font-size: 12px;
       padding: 5px;
-      width: 100%;
     }
 
     .eye{
@@ -59,7 +86,7 @@ export const Form = styled.form`
     }
 
     p{
-      font-size: 12px;
+      font-size: 14px;
     }
 
     label{
@@ -71,23 +98,18 @@ export const Form = styled.form`
     }
   }
 
-  @media(max-width: 500px){
+  @media(max-width: 400px){
     p{
-      font-size: 4vw;
+      font-size: 11px;
     }
 
-    input{
-      font-size: 11px;
-      margin: 12px 0;
+    input, button{
+      margin: 6px 0;
     }
   }
 `;
 
-type Props = {
-  dark: boolean
-}
-
-export const PassOption = styled.p<Props>`
+export const PassOption = styled.p`
   color: #fff;
   margin: 2px 0;
 
