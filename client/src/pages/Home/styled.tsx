@@ -10,18 +10,20 @@ export const Container = styled.div`
     grid-template-columns: repeat(1, 1fr);
   }
 
-  @media(min-height: 1000px) and (max-width: 1200px){ // get to know how to put 2 if in media
+  @media(min-height: 1000px) and (max-width: 1200px){
     grid-template-columns: repeat(1, 1fr);
   }
 `;
 
 export const List = styled.div`
+  align-items: center;
   color: #fff;
   overflow-y: auto;
-  max-height: 300px;
+  height: calc(100% - 53px);
   
   ul{
     list-style-type: none;
+    max-height: 300px;
   }
   
   @media(min-height: 1500px){
