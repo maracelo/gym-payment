@@ -164,7 +164,7 @@ describe('test admin\'s routes', () =>{
         });
     });
 
-    /* describe('it should not update admin', () =>{
+    describe('it should not update admin', () =>{
 
         test('wrong name', async () =>{
             await request(app)
@@ -219,7 +219,7 @@ describe('test admin\'s routes', () =>{
                 .expect(400)
             .then(res =>{ expect(res.body).toStrictEqual({err: 'Invalid phone number'}) })
         });
-    }); */
+    });
 
     describe('it should delete admin', () =>{
         it('should delete admin', async () =>{
