@@ -1,9 +1,18 @@
-function genRandPhoneNum(){
-    let phone = '55849' + (Math.floor(Math.random() * 99999999)).toString(); // TODO get all available states
+function genRandPhoneNum(){ // using brazilian pattern
+  let phone = '55';
+  phone += Math.floor(Math.random() * 99).toString()
 
-    for(let lefting = 13 - phone.length;  lefting > 0; lefting--) phone += '0';
+  addZero(phone, 4);
 
-    return phone;
+  phone = '55849' + (Math.floor(Math.random() * 99999999)).toString();
+
+  addZero(phone, 13);
+
+  return phone;
+}
+
+function addZero(str: string, len: number){
+  for(let lefting = len - str.length; lefting > 0; lefting--) str += '0';
 }
 
 export default genRandPhoneNum;
