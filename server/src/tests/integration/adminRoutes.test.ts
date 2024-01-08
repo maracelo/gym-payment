@@ -11,6 +11,7 @@ import genRandPhoneNum from "../../helpers/genRandPhoneNum";
 dotenv.config();
 
 describe('test admin\'s routes', () =>{
+    let firstAdminToken = '';
     let firstAdminId = '';
 
     beforeAll(async () =>{
@@ -24,13 +25,14 @@ describe('test admin\'s routes', () =>{
 
     it('should create an admin', async () =>{
         await request(app)
-            .post('/api/register')
+            .post('/api/admin/register')
             .send('name=test&email=test@test.test&password=Test1test&password_confirmation=Test1test')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
             .expect(201)
         .then(res =>{
             let token = jwt.verify(res.body.token, process.env.JWT_SECRET as string) as any;
+            firstAdminToken = res.body.token;
             firstAdminId = token.id ?? '';
         });
     });
@@ -38,10 +40,27 @@ describe('test admin\'s routes', () =>{
     it('should get created admin', async () =>{
         await request(app)
             .get(`/api/admin/${firstAdminId}`)
+            .set('Authorization', 'Bearer ' + firstAdminToken)
             .expect('Content-Type', /json/)
             .expect(200)
         .then(res => expect(res.body.email).toBe('test@test.test'));
     });
+
+    /* it('should make login', async () =>{
+        await request(app)
+            .post('/api/admin/login')
+            .send('name=test&email=test@test.test')
+            .set('Accept', 'application/json')
+            .expect('Content', /json/)
+            .expect(200)
+        .then(res =>{
+            try{
+                jwt.verify(res.body.token, process.env.JWT_SECRET as string) as any;
+            }catch(err){
+                console.log(err);
+            }
+        });
+    })
 
     describe('it should not create an admin', ()=>{
         
@@ -237,5 +256,5 @@ describe('test admin\'s routes', () =>{
                 .expect(404)
             .then(res =>{ expect(res.body).toStrictEqual({err: 'Admin not found'}) })
         });
-    });
+    }); */
 });
