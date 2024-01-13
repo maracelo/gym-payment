@@ -20,7 +20,7 @@ export async function login(req: Request, res: Response){
     if(!admin || !password && bcrypt.compareSync(password, admin.password))
         return res.status(400).json({err: 'Invalid email or password'});
 
-    const token = generateToken(admin.id);
+    const token = generateToken({id: admin.id});
 
     res.json({token});
 }
