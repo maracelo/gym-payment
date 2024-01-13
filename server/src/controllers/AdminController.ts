@@ -98,16 +98,24 @@ export async function update(req: Request, res: Response){
 
 export async function del(req: Request, res: Response){
     const id = req.params.id;
+    const password = req.body.password;
 
-    if(id){
+    if(id && password){
         try{
-            const admin = await Admin.findOneAndDelete({_id: id});
-            if(admin) return res.json({success: 'Admin deleted'});
+            const admin = await Admin.findOne({_id: id});
+
+            if(!admin) return res.json({err: 'Amdin not found'});
+
+            if(bcrypt.compareSync(password, admin.password)) {err: 'Wrong password'};
+
+            await Admin.findOneAndDelete({_id: id});
+            return res.json({success: 'Admin deleted'});
+
         }catch(err){
             console.log(err);
             return res.status(500).json({err: 'System error'})
         }
     }
 
-    res.json({err: 'Admin not deleted'});
+    res.status(400).json({err: 'Password or id not send'});
 }
