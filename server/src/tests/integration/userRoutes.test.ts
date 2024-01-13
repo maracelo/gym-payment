@@ -7,9 +7,15 @@ import genRandPhoneNum from '../../helpers/genRandPhoneNum';
 
 describe("test user's routes", () =>{
     let firstUserId = '';
+    let adminLoginToken = '';
 
     beforeAll(async () =>{
         await MongoConnect();
+
+        await request(app)
+            .post('/api/admin/register')
+            .send('name=test&email=test@test.test&password=Test1test&password_confirmation=Test1test')
+        .then(res =>{ adminLoginToken = `Bearer ${res.body.token}` });
     });
 
     afterAll(async () =>{
@@ -21,15 +27,17 @@ describe("test user's routes", () =>{
         await request(app)
             .post('/api/user')
             .send('name=test&email=test@test.test&plan=vip')
+            .set('Authorization', adminLoginToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(201)
         .then(res =>{ firstUserId = res.body._id });
     });
-
+    
     it('should get created user', async () =>{
         await request(app)
             .get(`/api/user/${firstUserId}`)
+            .set('Authorization', adminLoginToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(200)
@@ -42,6 +50,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .post('/api/user')
                 .send('name=test&email=test@test.test&plan=vip')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -52,6 +61,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .post('/api/user')
                 .send('name=t@test.test&plan=vip')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -62,6 +72,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .post('/api/user')
                 .send('name=t&email=test2@test.test&plan=vip')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -72,6 +83,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .post('/api/user')
                 .send('name=test&email=test2@test.test&plan=test')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -82,6 +94,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .post('/api/user')
                 .send('name=test&email=test2@test.test&plan=vip&phone=0')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -93,6 +106,7 @@ describe("test user's routes", () =>{
         await request(app)
             .post('/api/user')
             .send('name=test2&email=test2@test.test&plan=normal&phone=+5584900000000')
+            .set('Authorization', adminLoginToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(201)
@@ -101,6 +115,7 @@ describe("test user's routes", () =>{
     it('should get 2 users', async () =>{
         await request(app)
             .get('/api/users')
+            .set('Authorization', adminLoginToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(200)
@@ -115,6 +130,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`name=${name}`)
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
@@ -127,6 +143,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`email=${email}`)
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
@@ -139,6 +156,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`plan=${plan}`)
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
@@ -151,6 +169,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`phone=${phone}`)
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
@@ -164,6 +183,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('name=t')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -174,6 +194,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('email=t')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -184,6 +205,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('email=test2@test.test')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -194,6 +216,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('plan=t')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -204,6 +227,7 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('phone=0')
+                .set('Authorization', adminLoginToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -216,6 +240,7 @@ describe("test user's routes", () =>{
         it('should delete user', async () =>{
             await request(app)
                 .delete(`/api/user/${firstUserId}`)
+                .set('Authorization', adminLoginToken)
                 .expect('Content-type', /json/)
                 .expect(200)
             .then(res =>{ expect(res.body).toStrictEqual({success: 'User deleted'}) });
@@ -224,9 +249,9 @@ describe("test user's routes", () =>{
         it('should not find user', async () =>{
             await request(app)
                 .get(`/api/user/${firstUserId}`)
+                .set('Authorization', adminLoginToken)
                 .expect(404)
             .then(res =>{ expect(res.body).toStrictEqual({ err: 'User not found' }) })
         })
     });
-
 });
