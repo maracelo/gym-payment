@@ -32,7 +32,7 @@ describe('test admin\'s routes', () =>{
             .expect(201)
         .then(res =>{
             let token = jwt.verify(res.body.token, process.env.JWT_SECRET as string) as any;
-            firstAdminToken = res.body.token;
+            firstAdminToken = `Bearer ${res.body.token}`;
             firstAdminId = token.id ?? '';
         });
     });
@@ -40,22 +40,23 @@ describe('test admin\'s routes', () =>{
     it('should get created admin', async () =>{
         await request(app)
             .get(`/api/admin/${firstAdminId}`)
-            .set('Authorization', 'Bearer ' + firstAdminToken)
+            .set('Authorization', firstAdminToken)
             .expect('Content-Type', /json/)
             .expect(200)
         .then(res => expect(res.body.email).toBe('test@test.test'));
     });
 
-    /* it('should make login', async () =>{
+    it('should make login', async () =>{
         await request(app)
             .post('/api/admin/login')
-            .send('name=test&email=test@test.test')
+            .send('email=test@test.test&password=Test1test')
             .set('Accept', 'application/json')
-            .expect('Content', /json/)
+            .expect('Content-Type', /json/)
             .expect(200)
         .then(res =>{
             try{
                 jwt.verify(res.body.token, process.env.JWT_SECRET as string) as any;
+                firstAdminToken = `Bearer ${res.body.token}`;
             }catch(err){
                 console.log(err);
             }
@@ -66,7 +67,7 @@ describe('test admin\'s routes', () =>{
         
         test('wrong name', async () =>{
             await request(app)
-                .post('/api/register')
+                .post('/api/admin/register')
                 .send('name=t')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
@@ -76,7 +77,7 @@ describe('test admin\'s routes', () =>{
         
         test('wrong email', async () =>{
             await request(app)
-                .post('/api/register')
+                .post('/api/admin/register')
                 .send('name=test&email=t&password=Test1test&password_confirmation=Test1test')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
@@ -86,7 +87,7 @@ describe('test admin\'s routes', () =>{
 
         test('existing email', async () =>{
             await request(app)
-                .post('/api/register')
+                .post('/api/admin/register')
                 .send('name=test&email=test@test.test&password=Test1test&password_confirmation=Test1test')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
@@ -96,7 +97,7 @@ describe('test admin\'s routes', () =>{
 
         test('wrong password', async () =>{
             await request(app)
-                .post('/api/register')
+                .post('/api/admin/register')
                 .send('name=test&email=test2@test.test&password=t&password_confirmation=t')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
@@ -111,7 +112,7 @@ describe('test admin\'s routes', () =>{
 
         test('wrong phone', async () =>{
             await request(app)
-                .post('/api/register')
+                .post('/api/admin/register')
                 .send('name=test&email=test2@test.test&password=Test2test&password_confirmation=Test2test&phone=0')
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
@@ -122,7 +123,7 @@ describe('test admin\'s routes', () =>{
 
     it('should add another admin', async () =>{
         await request(app)
-            .post('/api/register')
+            .post('/api/admin/register')
             .send('name=test&email=test2@test.test&password=Test1test&password_confirmation=Test1test')
             .set('Accept', 'application/json')
             .expect('Content-Type', /json/)
@@ -137,10 +138,11 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`name=${name}`)
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.name).toBe(name) })
+            .then(res =>{ expect(res.body.name).toBe(name) });
         });
 
         test('update email', async () =>{
@@ -149,6 +151,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`email=${email}`)
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -162,6 +165,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`new_password=${new_password}&current_password=${current_password}`)
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -176,6 +180,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`phone=${phone}`)
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
@@ -189,6 +194,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('name=t')
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -199,6 +205,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('email=t')
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -209,6 +216,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('email=test2@test.test')
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -219,6 +227,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('new_password=t&current_password=t')
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -233,6 +242,7 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('phone=0')
+                .set('Authorization', firstAdminToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -244,17 +254,19 @@ describe('test admin\'s routes', () =>{
         it('should delete admin', async () =>{
             await request(app)
                 .delete(`/api/admin/${firstAdminId}`)
+                .set('Authorization', firstAdminToken)
+                .send('password=Test2test')
                 .expect('Content-Type', /json/)
                 .expect(200)
             .then(res =>{ expect(res.body).toStrictEqual({success: 'Admin deleted'}) });
         });
     
-        it('should not find admin', async () =>{
+        it('should not find admin', async () =>{ // make login in another account and check if user exists in db
             await request(app)
                 .get(`/api/admin/${firstAdminId}`)
-                .expect('Content-Type', /json/)
-                .expect(404)
-            .then(res =>{ expect(res.body).toStrictEqual({err: 'Admin not found'}) })
+                .set('Authorization', firstAdminToken)
+                .send('password=Test2test')
+            .expect(401);
         });
-    }); */
+    });
 });
