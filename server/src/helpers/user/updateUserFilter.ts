@@ -1,9 +1,9 @@
 import validator from "validator";
 
-import User, { UserType } from "../models/User";
+import User, { UserType } from "../../models/User";
 
 import planValidator from "./planValidator";
-import phoneValidator from "./phoneValidator";
+import phoneValidator from "../phoneValidator";
 
 type updateFields = {
     name?: string,
@@ -15,7 +15,7 @@ type updateFields = {
 
 type filterReturn = Promise<updateFields | {err: string}>;
 
-async function filterUserDataUpdate(data: any, user: UserType): filterReturn{
+async function updateUserFilter(data: any, user: UserType): filterReturn{
     const { name, email, plan, phone } = data;
     let updateFields: updateFields = {};
 
@@ -49,4 +49,4 @@ async function filterUserDataUpdate(data: any, user: UserType): filterReturn{
     return updateFields;
 }
 
-export default filterUserDataUpdate;
+export default updateUserFilter;

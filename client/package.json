@@ -14,7 +14,8 @@
     "react-dom": "^18.0.0",
     "react-redux": "^8.1.3",
     "react-router-dom": "^6.18.0",
-    "styled-components": "^6.1.0"
+    "styled-components": "^6.1.0",
+    "universal-cookie": "^7.0.1"
   },
   "devDependencies": {
     "@types/dotenv": "^8.2.0",
@@ -23,6 +24,7 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-redux": "^7.1.29",
     "@types/styled-components": "^5.1.29",
+    "@types/universal-cookie": "^3.0.0",
     "@vitejs/plugin-react": "^1.3.0",
     "typescript": "^4.6.3",
     "vite": "^2.9.15"

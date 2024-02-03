@@ -1,9 +1,9 @@
 import validator from "validator";
 
-import User from "../models/User";
+import User from "../../models/User";
 
 import planValidator from "./planValidator";
-import phoneValidator from "./phoneValidator";
+import phoneValidator from "../phoneValidator";
 
 type createFields = {
     name: string,
@@ -15,7 +15,7 @@ type createFields = {
 
 type filterReturn = Promise<createFields | {err: string}>;
 
-async function filterUserDataCreate(data: any): filterReturn{
+async function createUserFilter(data: any): filterReturn{
     const { name, email, plan, phone } = data;
 
     if(!name || name.length < 2) return {err: 'Invalid name'};
@@ -36,4 +36,4 @@ async function filterUserDataCreate(data: any): filterReturn{
     return {name, email, plan, phone: filteredPhone ?? null};
 }
 
-export default filterUserDataCreate;
+export default createUserFilter;

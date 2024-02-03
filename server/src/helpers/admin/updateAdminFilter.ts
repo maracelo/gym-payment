@@ -1,10 +1,10 @@
 import validator from "validator";
 import bcrypt from "bcrypt";
 
-import Admin, { AdminType } from "../models/Admin";
+import Admin, { AdminType } from "../../models/Admin";
 
-import passwordValidator from "../helpers/passwordValidator";
-import phoneValidator from "./phoneValidator";
+import passwordValidator from "../passwordValidator";
+import phoneValidator from "../phoneValidator";
 
 type updateFields = {
     name?: string,

@@ -3,8 +3,13 @@ import passport from "passport";
 
 import * as UserController from "../controllers/UserController";
 import * as AdminController from "../controllers/AdminController";
+import * as RTokenController from "../controllers/RTokenController";
 
 const router = Router();
+
+router.get('/ping', (req: Request, res: Response) =>{ res.json({prong: true}) });
+
+router.get('/refresh', RTokenController.accessToken);
 
 router.post('/admin/login', AdminController.login);
 router.post('/admin/register', AdminController.create);
