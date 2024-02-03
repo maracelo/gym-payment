@@ -6,7 +6,7 @@ export type UserType = {
     phone: string|null,
     plan: 'normal'|'vip',
     profile_pic: string,
-    payment_status: 'not payed'|'payed',
+    payment_status: 'late'|'payed',
 }
 
 const UserSchema = new Schema<UserType>({

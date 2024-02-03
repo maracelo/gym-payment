@@ -31,7 +31,7 @@ describe('test admin\'s routes', () =>{
             .expect('Content-Type', /json/)
             .expect(201)
         .then(res =>{
-            let token = jwt.verify(res.body.token, process.env.JWT_SECRET as string) as any;
+            let token = jwt.verify(res.body.token, process.env.ACCESS_TOKEN_SECRET as string) as any;
             firstAdminToken = `Bearer ${res.body.token}`;
             firstAdminId = token.id ?? '';
         });
@@ -55,7 +55,7 @@ describe('test admin\'s routes', () =>{
             .expect(200)
         .then(res =>{
             try{
-                jwt.verify(res.body.token, process.env.JWT_SECRET as string) as any;
+                jwt.verify(res.body.token, process.env.ACCESS_TOKEN_SECRET as string) as any;
                 firstAdminToken = `Bearer ${res.body.token}`;
             }catch(err){
                 console.log(err);

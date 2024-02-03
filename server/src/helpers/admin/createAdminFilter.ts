@@ -1,10 +1,10 @@
 import validator from "validator";
 import bcrypt from "bcrypt";
 
-import Admin from "../models/Admin";
+import Admin from "../../models/Admin";
 
-import phoneValidator from "./phoneValidator";
-import passwordValidator from "./passwordValidator";
+import phoneValidator from "../phoneValidator";
+import passwordValidator from "../passwordValidator";
 
 type createFields = {
     name: string,
@@ -16,7 +16,7 @@ type createFields = {
 
 type filterReturn = Promise<createFields | {err: string}>;
 
-async function filterAdminDataCreate(data: any): filterReturn{
+async function createAdminFilter(data: any): filterReturn{
     const { name, email, phone, password, password_confirmation } = data;
 
     if(!name || name.length < 2) return {err: 'Invalid name'};
@@ -38,4 +38,4 @@ async function filterAdminDataCreate(data: any): filterReturn{
     return {name, email, phone: filteredPhone ?? null, password: bcrypt.hashSync(password, 10)};
 }
 
-export default filterAdminDataCreate;
+export default createAdminFilter;

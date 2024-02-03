@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import validator from "validator";
+import jwt from "jsonwebtoken";
 
 import Admin from '../models/Admin';
+import RefreshToken from "../models/RefreshToken";
 
-import generateToken from "../helpers/generateToken";
-import filterAdminDataUpdate from "../helpers/filterAdminDataUpdate";
-import filterAdminDataCreate from "../helpers/filterAdminDataCreate";
+import updateAdminFilter from "../helpers/admin/updateAdminFilter";
+import createAdminFilter from "../helpers/admin/createAdminFilter";
 
 export async function login(req: Request, res: Response){
     const { email, password } = req.body;
@@ -20,9 +21,23 @@ export async function login(req: Request, res: Response){
     if(!admin || !password && bcrypt.compareSync(password, admin.password))
         return res.status(400).json({err: 'Invalid email or password'});
 
-    const token = generateToken({id: admin.id});
+    const refreshToken = jwt.sign({userId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
 
-    res.json({token});
+    const sevenDaysDate = new Date(Date.now() + 604800000);
+
+    try{ // TODO create refreshtoken helper
+        const hasRToken = await RefreshToken.findOneAndUpdate(
+            {admin_id: admin.id}, {expiresin: sevenDaysDate, refresh_token: refreshToken}
+        );
+        
+        if(!hasRToken)
+            await RefreshToken.create({admin_id: admin.id, expiresin: sevenDaysDate, refresh_token: refreshToken});
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({error: 'System error'});
+    }
+
+    res.cookie('RefreshToken', refreshToken, {expires: sevenDaysDate}).redirect(process.env.ORIGIN_ALLOWED as string);
 }
 
 export async function get(req: Request, res: Response){
@@ -43,7 +58,7 @@ export async function get(req: Request, res: Response){
 }
 
 export async function create(req: Request, res: Response){
-   const newAdminFields = await filterAdminDataCreate(req.body);
+   const newAdminFields = await createAdminFilter(req.body);
 
    if('err' in newAdminFields) return res.status(400).json({err: newAdminFields.err});
 
@@ -51,8 +66,23 @@ export async function create(req: Request, res: Response){
         const admin = await Admin.create(newAdminFields);
 
         if(admin){
-            const token = generateToken({id: admin.id});
-            return res.status(201).json({token});
+            const refreshToken = jwt.sign({userId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
+
+            const sevenDaysDate = new Date(Date.now() + 604800000);
+
+            try{ // TODO create refreshtoken helper
+                const hasRToken = await RefreshToken.findOneAndUpdate(
+                    {admin_id: admin.id}, {expiresin: sevenDaysDate, refresh_token: refreshToken}
+                );
+                
+                if(!hasRToken)
+                    await RefreshToken.create({admin_id: admin.id, expiresin: sevenDaysDate, refresh_token: refreshToken});
+            }catch(err){
+                console.log(err);
+                return res.status(500).json({error: 'System error'});
+            }
+
+            return res.cookie('RefreshToken', refreshToken, {expires: sevenDaysDate}).redirect(process.env.ORIGIN_ALLOWED as string);
         }
     }catch(err){
         console.log(err);
@@ -78,7 +108,7 @@ export async function update(req: Request, res: Response){
     
     if(!admin) return res.status(404).json({err: 'Admin not found'});
     
-    const updateFields = await filterAdminDataUpdate(req.body, admin);
+    const updateFields = await updateAdminFilter(req.body, admin);
 
     if('err' in updateFields) return res.status(400).json({err: updateFields.err});
 

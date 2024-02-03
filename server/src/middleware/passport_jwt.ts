@@ -8,12 +8,12 @@ dotenv.config();
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-  secretOrKey: process.env.JWT_SECRET,
+  secretOrKey: process.env.ACCESS_TOKEN_SECRET,
 };
 
 passport.use(new Strategy(opts, async (jwt_payload, done) =>{
   try{
-    const user = await Admin.findOne({_id: jwt_payload.id});
+    const user = await Admin.findOne({_id: jwt_payload.userId});
     
     if(user) return done(null, user);
     
