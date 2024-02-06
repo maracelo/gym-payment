@@ -2,7 +2,6 @@ import validator from "validator";
 
 import User from "../../models/User";
 
-import planValidator from "./planValidator";
 import phoneValidator from "../phoneValidator";
 
 type createFields = {
@@ -24,7 +23,7 @@ async function createUserFilter(data: any): filterReturn{
 
     if(await User.findOne({email})) return {err: 'Email already exists'};
 
-    if(!plan || !planValidator(plan)) return {err: 'Invalid plan'};
+    if(!plan) return {err: 'Invalid plan'};
 
     let filteredPhone = null;
 
@@ -33,7 +32,7 @@ async function createUserFilter(data: any): filterReturn{
         if(!filteredPhone) return {err: 'Invalid phone number'};
     }
 
-    return {name, email, plan, phone: filteredPhone ?? null};
+    return {name, email, plan: plan ? 'vip' : 'normal', phone: filteredPhone ?? null};
 }
 
 export default createUserFilter;
