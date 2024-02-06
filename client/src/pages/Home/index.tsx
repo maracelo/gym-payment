@@ -15,14 +15,8 @@ function Home(){
   const accessTokenState = useAppSelector((state) => state.accessToken);
   const cookie = new Cookies();
 
-  const [todayList, setTodayList] = useState([]); // TODO today payment list and late payment list
-
-  let lateList = [
-    {_id: '10', name: 'Test10', "payment-status": 'late'},
-    {_id: '20', name: 'Test20', "payment-status": 'payed'},
-    {_id: '0', name: 'Test0', "payment-status": 'payed'},
-    {_id: '5', name: 'Test5', "payment-status": 'late'},
-  ];
+  const [todayList, setTodayList] = useState<any>([]);
+  const [lateList, setLateList] = useState<any>([]);
 
   const checkAccessToken = async () =>{
     return accessTokenState.accessToken ?? null;
@@ -46,9 +40,8 @@ function Home(){
     return res.accessToken;
   }
 
-  const getUsersList = async (accessToken: string) =>{
-    console.log(accessToken);
-    const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'users', {
+  const getUsersTodayList = async (accessToken: string) =>{
+    const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'usertoday', {
       method: 'get',
       headers: {
         'Authorization': 'Bearer ' + accessToken,
@@ -62,6 +55,21 @@ function Home(){
     if(res.users) setTodayList(res.users);
   }
 
+  const getUsersLateList = async (accessToken: string) =>{
+    const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'userlate', {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + accessToken,
+        'Accept': 'application/json',
+        'withCrendentials': 'include'
+      }
+    });
+
+    const res = await req.json();
+
+    if(res.users) setLateList(res.users);
+  }
+
   useEffect(() =>{
     (async () =>{
       let accessToken = await checkAccessToken();
@@ -69,10 +77,10 @@ function Home(){
       if(!accessToken) accessToken = await getAccessToken();
 
       if(accessToken){
-        await getUsersList(accessToken);
+        await getUsersTodayList(accessToken);
+        await getUsersLateList(accessToken);
 
         dispatch(setAccessToken(accessToken));
-
       } else navigate('/admin/login');
     })();
   }, []);
@@ -102,7 +110,7 @@ function Home(){
 
         <List>
           <ul>
-            {lateList.map((el, i) =>(
+            {lateList.length > 0 && lateList.map((el: any, i: number) =>(
               <User status={el['payment-status']} key={el._id}>
                 <Link to={`http://localhost:3000/user/${el._id}`}>
                   <img src="http://localhost:3000/public/assets/images/default.png" alt="" />
