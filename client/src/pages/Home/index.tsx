@@ -13,6 +13,7 @@ import useAppSelector from '../../redux/typedUseSelectorHook';
 import getAccessToken from '../../helpers/getAccessToken';
 import getUsersTodayList from '../../helpers/getUsersTodayList';
 import getUsersLateList from '../../helpers/getUsersLateList';
+import checkAccessToken from '../../helpers/checkAccessToken';
 
 function Home(){
   const navigate = useNavigate();
@@ -25,7 +26,10 @@ function Home(){
 
   useEffect(() =>{
     (async () =>{
-      let accessToken = accessTState.accessToken;
+      let accessToken: string = accessTState.accessToken;
+
+      if(!checkAccessToken(accessToken)) accessToken = '';
+
       const refreshToken = cookie.get('RefreshToken');
 
       if(!accessToken && refreshToken){

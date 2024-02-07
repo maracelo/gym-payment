@@ -10,6 +10,7 @@ import { setAccessToken } from '../../../redux/reducers/accessTokenReducer';
 import useAppSelector from '../../../redux/typedUseSelectorHook';
 
 import getAccessToken from '../../../helpers/getAccessToken';
+import checkAccessToken from '../../../helpers/checkAccessToken';
 
 function AdminLogin(){
   const navigate = useNavigate();
@@ -22,7 +23,10 @@ function AdminLogin(){
 
   useEffect(() =>{
     (async() =>{
-      let accessToken = accessTState.accessToken;
+      let accessToken: string = accessTState.accessToken;
+
+      if(!checkAccessToken(accessToken)) accessToken = '';
+
       const refreshToken = cookie.get('RefreshToken');
 
       if(!accessToken && refreshToken) accessToken = await getAccessToken(refreshToken);
