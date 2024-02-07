@@ -9,16 +9,16 @@ export function accessToken(req: Request, res: Response){
 
     if(refreshToken && refreshToken != 'undefined'){
         
-        let userId = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
+        let adminId = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
     
-        if(userId){
-            if(typeof userId != 'string')userId = userId.userId;
+        if(adminId){
+            if(typeof adminId != 'string') adminId = adminId.adminId;
 
-            const accessToken = jwt.sign({userId}, process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: '1h'}); // error right here
+            const accessToken = jwt.sign({adminId}, process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: '1h'});
         
             return res.json({accessToken});
         }
     }
 
-    res.status(401).json({error: 'Not authorized'});
+    res.status(401).json({err: 'Unauthorized'});
 }
