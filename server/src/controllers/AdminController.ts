@@ -21,7 +21,7 @@ export async function login(req: Request, res: Response){
     if(!admin || !password && bcrypt.compareSync(password, admin.password))
         return res.status(400).json({err: 'Invalid email or password'});
 
-    const refreshToken = jwt.sign({userId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
+    const refreshToken = jwt.sign({adminId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
 
     const sevenDaysDate = new Date(Date.now() + 604800000);
 
@@ -66,7 +66,7 @@ export async function create(req: Request, res: Response){
         const admin = await Admin.create(newAdminFields);
 
         if(admin){
-            const refreshToken = jwt.sign({userId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
+            const refreshToken = jwt.sign({adminId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
 
             const sevenDaysDate = new Date(Date.now() + 604800000);
 
@@ -91,13 +91,6 @@ export async function create(req: Request, res: Response){
 
     res.json({err: 'Admin not created'});
 }
-
-type updateFields = {
-    name?: string,
-    email?: string,
-    phone?: string,
-    password?: string
-};
 
 export async function update(req: Request, res: Response){
     const id = req.params.id;

@@ -4,26 +4,25 @@ import User from "../models/User";
 
 import updateUserFilter from "../helpers/user/updateUserFilter";
 import createUserFilter from "../helpers/user/createUserFilter";
+import getTodayMonthDay from "../helpers/getTodayMonthDay";
 
-export async function getTodayList(){ // TODO
-
-}
-
-export async function getLateList(){ // TODO
-
-}
-
-export async function getAll(req: Request, res: Response){
-    const accessToken = req.headers.authorization?.split(' ')[1]
-
-    if(!accessToken && accessToken == 'undefined') res.status(401).json({error: 'Not authorized 2'});
-
+export async function getTodayList(req: Request, res: Response){
     try{
-        const users = await User.find() ?? {users: []};
-        return res.json({users});
+        const todayUsers = await User.find().where('createdAt').equals(getTodayMonthDay());
+        return res.json({todayUsers});
     }catch(err){
         console.log(err);
-        res.status(500).json({err: 'System error'});
+        res.status(500).json({err: {err: 'System error'}})
+    }
+}
+
+export async function getLateList(req: Request, res: Response){
+    try{
+        const lateUsers = await User.find().where('createdAt').equals(getTodayMonthDay()).where('payment_status').equals('late');
+        return res.json({lateUsers});
+    }catch(err){
+        console.log(err);
+        res.status(500).json({err: 'System error'})
     }
 }
 
@@ -34,7 +33,7 @@ export async function get(req: Request, res: Response){
         try{
             let user = await User.findOne({_id: id});
 
-            if(user) return res.json(user);
+            if(user) return res.json({user});
             
             return res.status(404).json({err: 'User not found'});
         }catch(err){
@@ -52,12 +51,12 @@ export async function create(req: Request, res: Response){
     try{
         const user = await User.create(newUserFields);
 
-        if(user) return res.status(201).json(user);
+        if(user) return res.status(201).json({user});
         
         return res.status(500).json({err: 'User not created'});
     }catch(err){
         console.log(err);
-        res.status(500).json('System error');
+        res.status(500).json({err: 'System error'});
     }
 }
 
@@ -78,10 +77,10 @@ export async function update(req: Request, res: Response){
         try{
             const updatedUser = await User.findOneAndUpdate({_id: id}, updateFields, {new: true});
 
-            if(updatedUser) return res.json(updatedUser);
+            if(updatedUser) return res.json({updatedUser});
         }catch(err){
             console.log(err);
-            return res.status(500).json('System error');
+            return res.status(500).json({err: 'System error'});
         }
     }
 
@@ -100,7 +99,7 @@ export async function del(req: Request, res: Response){
             return res.status(404).json({err: 'User not found'});
         }catch(err){
             console.log(err);
-            res.status(500).json('System error');
+            res.status(500).json({err: 'System error'});
         }
     }
     
