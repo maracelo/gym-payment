@@ -5,46 +5,27 @@ import Cookies from "universal-cookie";
 
 import { Title, Container, Form, PassOption } from '../styled';
 import PasswordInput from '../../../components/PasswordInput';
-import useAppSelector from '../../../redux/typedUseSelectorHook';
+
 import { setAccessToken } from '../../../redux/reducers/accessTokenReducer';
+import useAppSelector from '../../../redux/typedUseSelectorHook';
+
+import getAccessToken from '../../../helpers/getAccessToken';
 
 function AdminLogin(){
   const navigate = useNavigate();
-  const accessTokenState = useAppSelector((state) => state.accessToken);
   const cookie = new Cookies();
   const dispatch = useDispatch();
+  const accessTState = useAppSelector(state => state.accessToken)
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
-  const checkAccessToken = async () =>{
-    console.log('accessToken: ' + accessTokenState.accessToken);
-    return accessTokenState.accessToken ?? null;
-  }
-
-  const getAccessToken = async () =>{
-    const refreshToken = cookie.get('RefreshToken');
-
-    const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'refresh', {
-      method: 'get',
-      headers: {
-        'Accept': 'application/json',
-        'withCredentials': 'include',
-        'SameSite': 'none',
-        'Authorization': 'Bearer ' + refreshToken
-      }
-    });
-
-    const res = await req.json();
-
-    return res.accessToken;
-  }
-
   useEffect(() =>{
     (async() =>{
-      let accessToken = await checkAccessToken();
+      let accessToken = accessTState.accessToken;
+      const refreshToken = cookie.get('RefreshToken');
 
-      if(!accessToken) accessToken = await getAccessToken();
+      if(!accessToken && refreshToken) accessToken = await getAccessToken(refreshToken);
 
       if(accessToken){
         dispatch(setAccessToken(accessToken));
