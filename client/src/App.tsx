@@ -9,7 +9,7 @@ function App() {
   const darkState = useAppSelector((state) => state.darkMode);
 
   return (
-    <MainContainer dark={darkState.dark}>
+    <MainContainer dark={darkState.dark ? 'true' : 'false'}>
       <Header />
       <div className="container">
         <RouteList />
