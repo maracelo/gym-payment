@@ -1,9 +1,12 @@
 import { MongoConnect } from "./database/mongo";
 import app from "./app";
+import checkPaymentStatus from "./helpers/checkPaymentStatus";
 
 const server = app;
 
 MongoConnect();
+
+checkPaymentStatus();
 
 try{
     server.listen(process.env.PORT, () => {
