@@ -7,6 +7,7 @@ export type UserType = {
     plan: 'normal'|'vip',
     profile_pic: string,
     payment_status: 'late'|'payed',
+    createdAt: Date
 }
 
 const UserSchema = new Schema<UserType>({
@@ -15,9 +16,10 @@ const UserSchema = new Schema<UserType>({
     phone: {type: String, default: null},
     plan: {type: String, enum: ['normal', 'vip'], default: 'normal', required: true},
     profile_pic: {type: String, default: 'default_profile_pic.jpg'},
-    payment_status: {type: String, enum: ['not payed', 'payed'], default: 'payed'},
+    payment_status: {type: String, enum: ['late', 'payed'], default: 'payed'},
+    createdAt: {type: Date, default: new Date()}
 }, {
-    timestamps: true,
+    timestamps: false,
     versionKey: false
 });
 
