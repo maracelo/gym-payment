@@ -18,7 +18,8 @@ router.get('/admin/:id', passport.authenticate('jwt', {session: false}), AdminCo
 router.put('/admin/:id', passport.authenticate('jwt', {session: false}), AdminController.update);
 router.delete('/admin/:id', passport.authenticate('jwt', {session: false}), AdminController.del);
 
-router.get('/users', passport.authenticate('jwt', {session: false}), UserController.getAll);
+router.get('/usertoday', passport.authenticate('jwt', {session: false}), UserController.getTodayList);
+router.get('/userlate', passport.authenticate('jwt', {session: false}), UserController.getLateList);
 router.get('/user/:id', passport.authenticate('jwt', {session: false}), UserController.get);
 router.post('/user', passport.authenticate('jwt', {session: false}), UserController.create);
 router.put('/user/:id', passport.authenticate('jwt', {session: false}), UserController.update);
