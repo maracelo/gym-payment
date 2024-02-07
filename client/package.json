@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^1.9.7",
+    "@types/jwt-decode": "^3.1.0",
     "dotenv": "^16.3.1",
+    "jwt-decode": "^4.0.0",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "react-redux": "^8.1.3",
