@@ -18,7 +18,7 @@ export async function getTodayList(req: Request, res: Response){
 
 export async function getLateList(req: Request, res: Response){
     try{
-        const lateUsers = await User.find().where('createdAt').equals(getTodayMonthDay()).where('payment_status').equals('late');
+        const lateUsers = await User.find().where('payment_status').equals('late');
         return res.json({lateUsers});
     }catch(err){
         console.log(err);
