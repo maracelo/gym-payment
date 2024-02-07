@@ -7,8 +7,8 @@ const slice = createSlice({
   initialState,
   reducers: {
     setDarkMode: (state, action) =>{
-      state.dark = action.payload ? true : false;
       localStorage.setItem('darkMode', action.payload ? 'true' : 'false');
+      return {...state, dark: action.payload ? true : false};
     }
   }
 });
