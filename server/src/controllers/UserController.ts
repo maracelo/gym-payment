@@ -4,11 +4,11 @@ import User from "../models/User";
 
 import updateUserFilter from "../helpers/user/updateUserFilter";
 import createUserFilter from "../helpers/user/createUserFilter";
-import getTodayMonthDay from "../helpers/getTodayMonthDay";
+import getTodayDay from "../helpers/getTodayDay";
 
 export async function getTodayList(req: Request, res: Response){
     try{
-        const todayUsers = await User.find().where('createdAt').equals(getTodayMonthDay());
+        const todayUsers = await User.find({payment_day: getTodayDay()});
         return res.json({todayUsers});
     }catch(err){
         console.log(err);
@@ -18,7 +18,7 @@ export async function getTodayList(req: Request, res: Response){
 
 export async function getLateList(req: Request, res: Response){
     try{
-        const lateUsers = await User.find().where('payment_status').equals('late');
+        const lateUsers = await User.find({payment_day: getTodayDay()});
         return res.json({lateUsers});
     }catch(err){
         console.log(err);
