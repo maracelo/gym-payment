@@ -4,6 +4,7 @@ import passport from "passport";
 import * as UserController from "../controllers/UserController";
 import * as AdminController from "../controllers/AdminController";
 import * as RTokenController from "../controllers/RTokenController";
+import * as PaymentController from "../controllers/PaymentController";
 
 const router = Router();
 
@@ -24,5 +25,7 @@ router.get('/user/:id', passport.authenticate('jwt', {session: false}), UserCont
 router.post('/user', passport.authenticate('jwt', {session: false}), UserController.create);
 router.put('/user/:id', passport.authenticate('jwt', {session: false}), UserController.update);
 router.delete('/user/:id', passport.authenticate('jwt', {session: false}), UserController.del);
+
+router.put('/payment/:id', passport.authenticate('jwt', {session: false}), PaymentController.updatePaymentStatus);
 
 export default router;
