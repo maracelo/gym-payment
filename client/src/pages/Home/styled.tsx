@@ -37,9 +37,9 @@ export const List = styled.div`
   }
 `;
 
-type UserProps = { status: string }
+type UserProps = { status: string };
 
-export const User = styled.li<UserProps>`
+export const User = styled.li<UserProps> `
   border-right: 1px solid #fff;
   border-bottom: 1px solid #fff;
   padding: 5px;
@@ -50,19 +50,28 @@ export const User = styled.li<UserProps>`
     background-color: #ffffff34;
   }
 
-  img{
-    width: 50px;
-    height: 50px;
-    margin-right: 5px;
+  a{
+    width: fit-content;
+
+    img{
+      width: 50px;
+      height: 50px;
+      margin-right: 5px;
+    }
   }
   
-  a{
+  div{
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, 2fr);
     justify-content: space-between;
     align-items: center;
     text-decoration: none;
     color: #fff;
+    z-index: 1;
+
+    p, span, h4{
+      z-index: -1;
+    }
 
     p{
       display: flex;
@@ -78,6 +87,38 @@ export const User = styled.li<UserProps>`
       background-color: ${(props) => props.status === 'late' ? '#ff000030' : '#00ff0030'};
       padding: 5px;
       border-radius: 10px;
+    }
+
+    .changeStatusContainer{
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      button{
+        background-color: #2c60a5;
+        color: white;
+        font-size: 0px;
+        width: fit-content;
+        height: fit-content;
+        padding: 0;
+        margin: 0;
+        border: none;
+        cursor: pointer;
+        transition: .2s linear;
+        left: 0;
+        right: 0;
+      }
+  
+      .showBtn{
+        visibility: visible;
+        padding: 5px;
+        font-weight: bolder;
+        border-radius: 5px;
+        border: none;
+        font-size: 11px;
+        text-align: center;
+        transition: .2s linear;
+      }
     }
 
     @media(max-width: 1100px){

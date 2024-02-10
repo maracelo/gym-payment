@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 
@@ -48,6 +48,33 @@ function Home(){
     })();
   }, []);
 
+  let todayListWindow: never | any[] = [];
+
+  const handleChangeStatus = async (id: string) =>{
+    const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'payment/' + id, {
+      method: 'put',
+      headers: {
+        'Authorization': 'Bearer ' + accessTState.accessToken
+      }
+    });
+
+    console.log(await req.json());
+  }
+
+  const handleOpenUserWindow = (e: any) =>{
+    const btn = e.target.querySelector('button');
+
+    if(btn){
+      btn.className === 'showBtn' ? btn.className = '' : btn.className = 'showBtn';
+  
+      const triangle = e.target.querySelector('.triangle');
+  
+      triangle.innerHTML = triangle.innerHTML === '▼' ?
+        triangle.innerHTML.replace('▼', '▲') :
+        triangle.innerHTML.replace('▲', '▼');
+    }
+  }
+
   return (
     <Container>
       <Area>
@@ -55,15 +82,24 @@ function Home(){
 
         <List>
           <ul>
-            {todayList.length > 0 && todayList.map((el: any, i: number) =>(
-              <User status={el['payment_status']} key={el._id}>
-                <Link to={`http://localhost:3000/user/${el._id}`}>
-                  <img src="http://localhost:3000/public/assets/images/default.png" alt="" />
-                  <h4>{el.name}</h4>
-                  <p>Staus:&#160;<span>{el['payment_status']}</span></p>
-                </Link>
-              </User>
-            ))}
+            {todayList.length > 0 && todayList.map((el: any) =>{
+              todayListWindow.push({id: el._id, windowOpen: false});
+
+              return (
+                <User status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
+                  <div>
+                    <Link to={`http://localhost:3000/user/${el._id}`}>
+                      <img src="http://localhost:3000/public/assets/images/default.png" alt="" />
+                    </Link>
+                    <h4>{el.name}</h4>
+                    <p>Staus:&nbsp;<span>{ el['payment_status'] === 'payed' ? 'Payed' : 'Late' }</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                    <div></div>
+                    <div></div>
+                    <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Payment Status</button></div>
+                  </div>
+                </User>
+              )
+            })}
           </ul>
         </List>
       </Area>
@@ -73,15 +109,20 @@ function Home(){
 
         <List>
           <ul>
-            {lateList.length > 0 && lateList.map((el: any, i: number) =>(
-              <User status={el['payment_status']} key={el._id}>
-                <Link to={`http://localhost:3000/user/${el._id}`}>
-                  <img src="http://localhost:3000/public/assets/images/default.png" alt="" />
+            {lateList.length > 0 && lateList.map((el: any) =>(
+
+              <User status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
+                <div >
+                <Link to={`http://localhost:3000/user/${el._id}`}><img src="http://localhost:3000/public/assets/images/default.png" alt="" /></Link>
                   <h4>{el.name}</h4>
-                  <p>Staus:&#160;<span>{el['payment_status']}</span></p>
-                </Link>
+                  <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                  <div></div>
+                  <div></div>
+                  <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Payment Status</button></div>
+                </div>
               </User>
             ))}
+
           </ul>
         </List>
       </Area>

@@ -3,13 +3,17 @@ import User from "../models/User";
 
 export async function updatePaymentStatus(req: Request, res: Response){
     const id = req.params.id;
-    const paymentSatus = req.body.payment_status;
-
-    if(typeof(paymentSatus) !== 'boolean') return res.status(400).json({err: 'paymentStatus must be boolean'});
 
     try{
-        const user = await User.findOneAndUpdate({_id: id}, {payment_status: paymentSatus});
-        if(user) return res.json({err: 'payment status updated'});
+        const user = await User.findOne({_id: id});
+
+        if(user){
+            const update = await User.findOneAndUpdate(
+                {_id: id}, {payment_status: user.payment_status === 'late' ? 'payed' : 'late'}
+            );
+    
+            if(update) return res.json({err: 'payment status updated'});
+        }
     }catch(err){
         console.log(err);
         return res.json({err: 'system error'});
