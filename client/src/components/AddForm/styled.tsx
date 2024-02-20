@@ -99,3 +99,15 @@ export const Container = styled.div`
     }
   }
 `;
+
+type Props = { type: 'warning' | 'err' };
+
+export const Warning = styled.p<Props>`
+  background-color: #0000007d;
+  color: ${({ type }) => type === 'err' ? '#ac0000' : '#008000'};
+  border-radius: 10px;
+  padding: 5px;
+  font-size: 15px;
+  font-weight: bold;
+  border: 1px solid ${({ type }) => type === 'err' ? 'red' : 'green'}
+`;

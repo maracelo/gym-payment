@@ -95,7 +95,7 @@ export const User = styled.li<UserProps> `
       justify-content: center;
 
       button{
-        background-color: #2c60a5;
+        background-color: #0000007e;
         color: white;
         font-size: 0px;
         width: fit-content;
@@ -114,8 +114,8 @@ export const User = styled.li<UserProps> `
         padding: 5px;
         font-weight: bolder;
         border-radius: 5px;
-        border: none;
-        font-size: 11px;
+        border: 1px solid #ffffff7c;
+        font-size: 12px;
         text-align: center;
         transition: .2s linear;
       }

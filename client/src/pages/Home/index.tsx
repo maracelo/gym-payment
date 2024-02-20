@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from 'universal-cookie';
 
@@ -17,8 +17,9 @@ import checkAccessToken from '../../helpers/checkAccessToken';
 
 function Home(){
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const cookie = new Cookies();
+  
+  const dispatch = useDispatch();
   const accessTState = useAppSelector(state => state.accessToken);
 
   const [todayList, setTodayList] = useState<any>([]);
@@ -26,27 +27,27 @@ function Home(){
 
   useEffect(() =>{
     (async () =>{
-      let accessToken: string = accessTState.accessToken;
+      let token: string = accessTState.accessToken;
 
-      if(!checkAccessToken(accessToken)) accessToken = '';
+      if(!checkAccessToken(token)) token = '';
 
       const refreshToken = cookie.get('RefreshToken');
 
-      if(!accessToken && refreshToken){
-        accessToken = await getAccessToken(refreshToken);
-        dispatch(setAccessToken(accessToken));
+      if(!token && refreshToken){
+        token = await getAccessToken(refreshToken);
+        dispatch(setAccessToken(token));
       } 
 
-      if(accessToken){
-        const todayListRes = await getUsersTodayList(accessToken);
+      if(token){
+        const todayListRes = await getUsersTodayList(token);
         if(todayListRes) setTodayList(todayListRes);
 
-        const lateListRes = await getUsersLateList(accessToken);
+        const lateListRes = await getUsersLateList(token);
         if(lateListRes) setLateList(lateListRes);
 
       } else navigate('/admin/login');
     })();
-  }, []);
+  }, [accessTState.accessToken]);
 
   let todayListWindow: never | any[] = [];
 
@@ -95,7 +96,7 @@ function Home(){
                     <p>Staus:&nbsp;<span>{ el['payment_status'] === 'payed' ? 'Payed' : 'Late' }</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
                     <div></div>
                     <div></div>
-                    <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Payment Status</button></div>
+                    <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
                   </div>
                 </User>
               )
@@ -118,7 +119,7 @@ function Home(){
                   <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
                   <div></div>
                   <div></div>
-                  <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Payment Status</button></div>
+                  <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
                 </div>
               </User>
             ))}
@@ -130,7 +131,7 @@ function Home(){
       <Area>
         <h1>ADD</h1>
 
-        <AddForm />
+        <AddForm setTodayList={setTodayList} />
       </Area>
     </Container>
   );
