@@ -18,7 +18,7 @@ export async function getTodayList(req: Request, res: Response){
 
 export async function getLateList(req: Request, res: Response){
     try{
-        const lateUsers = await User.find({payment_day: getTodayDay()});
+        const lateUsers = await User.find({payment_status: 'late'});
         return res.json({lateUsers});
     }catch(err){
         console.log(err);
