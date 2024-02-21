@@ -102,8 +102,8 @@ function Home(){
               return (
                 <User status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                   <div>
-                    <Link to={`http://localhost:3000/user/${el._id}`}>
-                      <img src="http://localhost:3000/public/assets/images/default.png" alt="" />
+                    <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
+                      <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                     </Link>
                     <h4>{el.name}</h4>
                     <p>Staus:&nbsp;<span>{ el['payment_status'] === 'payed' ? 'Payed' : 'Late' }</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
@@ -127,7 +127,9 @@ function Home(){
 
               <User status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                 <div >
-                <Link to={`http://localhost:3000/user/${el._id}`}><img src="http://localhost:3000/public/assets/images/default.png" alt="" /></Link>
+                  <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
+                      <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                  </Link>
                   <h4>{el.name}</h4>
                   <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
                   <div></div>
