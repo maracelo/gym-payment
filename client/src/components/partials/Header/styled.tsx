@@ -10,7 +10,11 @@ export const Header = styled.header`
   justify-content: space-between;
   align-items: center;
   padding-bottom: 10px;
-  border-bottom: 2px solid #fff
+  border-bottom: 2px solid #fff;
+  
+  a{
+    text-decoration: none;
+  }
 `;
 
 export const Dark = styled.img`
