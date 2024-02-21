@@ -12,7 +12,7 @@ export async function updatePaymentStatus(req: Request, res: Response){
                 {_id: id}, {payment_status: user.payment_status === 'late' ? 'payed' : 'late'}
             );
     
-            if(update) return res.json({err: 'payment status updated'});
+            if(update) return res.json({success: 'payment status updated'});
         }
     }catch(err){
         console.log(err);
