@@ -59,7 +59,20 @@ function Home(){
       }
     });
 
-    console.log(await req.json());
+    const res = await req.json();
+
+    if('success' in res){
+      const token = accessTState.accessToken;
+  
+      const todayListRes = await getUsersTodayList(token);
+      if(todayListRes) setTodayList(todayListRes);
+  
+      const lateListRes = await getUsersLateList(token);
+      if(lateListRes) setLateList(lateListRes);
+    
+    }else if('err' in res){
+      alert(res.err);
+    }
   }
 
   const handleOpenUserWindow = (e: any) =>{
