@@ -123,22 +123,23 @@ export async function del(req: Request, res: Response){
     const id = req.params.id;
     const password = req.body.password;
 
-    if(id && password){
-        try{
-            const admin = await Admin.findOne({_id: id});
+    if(!id) return res.status(400).json({err: 'Invalid id'});
 
-            if(!admin) return res.json({err: 'Amdin not found'});
+    if(!password) return res.status(400).json({err: 'Invalid password'});
 
-            if(bcrypt.compareSync(password, admin.password)) {err: 'Wrong password'};
+    try{
+        const admin = await Admin.findOne({_id: id});
 
-            await Admin.findOneAndDelete({_id: id});
-            return res.json({success: 'Admin deleted'});
+        if(!admin) return res.json({err: 'Amdin not found'});
 
-        }catch(err){
-            console.log(err);
-            return res.status(500).json({err: 'System error'})
-        }
+        if(bcrypt.compareSync(password, admin.password)) {err: 'Wrong password'};
+
+        await Admin.findOneAndDelete({_id: id});
+        return res.json({success: 'Admin deleted'});
+
+    }catch(err){
+        console.log(err);
     }
-
-    res.status(400).json({err: 'Password or id not send'});
+    
+    return res.status(500).json({err: 'System error'})
 }

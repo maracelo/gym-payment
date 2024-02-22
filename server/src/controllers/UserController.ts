@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 import User from "../models/User";
 
@@ -77,7 +78,7 @@ export async function update(req: Request, res: Response){
         try{
             const updatedUser = await User.findOneAndUpdate({_id: id}, updateFields, {new: true});
 
-            if(updatedUser) return res.json({updatedUser});
+            if(updatedUser) return res.json({user: updatedUser});
         }catch(err){
             console.log(err);
             return res.status(500).json({err: 'System error'});
@@ -89,18 +90,23 @@ export async function update(req: Request, res: Response){
 
 export async function del(req: Request, res: Response){
     const id = req.params.id;
+    const adminPassword = (req.user as any).password ?? '';
+    const passwordSent = req.body.password;
 
-    if(id){
-        try{
-            const user = await User.findOneAndDelete({_id: id});
+    if(!id) return res.status(400).json({err: 'Invalid id'});
 
-            if(user) return res.json({success: 'User deleted'});
-            
-            return res.status(404).json({err: 'User not found'});
-        }catch(err){
-            console.log(err);
-            res.status(500).json({err: 'System error'});
-        }
+    if(!passwordSent || !bcrypt.compareSync(passwordSent, adminPassword))
+        return res.status(400).json({err: 'Invalid password'});
+
+    try{
+        const user = await User.findOneAndDelete({_id: id});
+
+        if(user) return res.json({success: 'User deleted'});
+        
+        return res.status(404).json({err: 'User not found'});
+    }catch(err){
+        console.log(err);
     }
-    
+
+    res.status(500).json({err: 'System error'});
 }
