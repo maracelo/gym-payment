@@ -33,8 +33,8 @@ async function updateUserFilter(data: any, user: UserType): filterReturn{
     }
 
     if(plan){
-        if(plan === user.plan || !planValidator(plan)) return {err: 'Invalid plan'};
-        updateFields.plan = plan;
+        if(!planValidator(plan)) return {err: 'Invalid plan'};
+        if(plan !== user.plan) updateFields.plan = plan;
     }
 
     if(phone){
