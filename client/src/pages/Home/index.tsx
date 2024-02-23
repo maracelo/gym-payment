@@ -35,6 +35,9 @@ function Home(){
 
       if(!token && refreshToken){
         token = await getAccessToken(refreshToken);
+
+        if(token === null) navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
+
         dispatch(setAccessToken(token));
       } 
 
