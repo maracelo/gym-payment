@@ -47,7 +47,7 @@ export async function get(req: Request, res: Response){
         try{
             const admin = await Admin.findOne({_id: id});
             
-            if(admin) return res.json(admin);
+            if(admin) return res.json({admin});
 
             return res.status(404).json({err: 'Admin not found'});
         }catch(err){
@@ -109,7 +109,7 @@ export async function update(req: Request, res: Response){
 
         try{
             const updatedAdmin = await Admin.findOneAndUpdate({_id: id}, updateFields, {new: true});
-            if(updatedAdmin) return res.json(updatedAdmin);
+            if(updatedAdmin) return res.json({admin: updatedAdmin});
         }catch(err){
             console.log(err);
             res.status(500).json({err: 'System error'});
