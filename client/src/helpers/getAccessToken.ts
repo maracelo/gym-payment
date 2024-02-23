@@ -11,6 +11,8 @@ async function getAccessToken(refreshToken: string){
 
   const res = await req.json();
 
+  if('err' in res) return null;
+
   return res.accessToken;
 }
 
