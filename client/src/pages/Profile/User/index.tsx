@@ -48,6 +48,9 @@ function User(){
 
       if(!token && refreshToken){
         token = await getAccessToken(refreshToken);
+
+        if(token === null) navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
+
         dispatch(setAccessToken(token));
       } 
 
@@ -216,7 +219,9 @@ function User(){
         <div id="delForm" className="formContainer" style={{display: showDelForm ? 'flex' : 'none'}}>
           <div className="form">
             <p className="X"><span onClick={handleShowDelForm}>X</span></p>
+
             <h4>Do you really want to delete this User?</h4>
+            
             <input type="password" name="password" placeholder="Admin's Password" value={userDelPassword} onChange={handleChangeUserDelPassword} />
 
             <button onClick={handleDel}>Delete</button>
