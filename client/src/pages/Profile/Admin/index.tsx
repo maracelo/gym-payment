@@ -2,12 +2,13 @@ import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Container, Info } from "../styled";
 import { useNavigate, useParams } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
 import { setAccessToken } from "../../../redux/reducers/accessTokenReducer";
 import getAccessToken from "../../../helpers/getAccessToken";
 import checkAccessToken from "../../../helpers/checkAccessToken";
-import Cookies from "universal-cookie";
+import Event from "../../../types/ChangeEventInput";
 
 type Admin = {
   name: string,
@@ -26,6 +27,8 @@ function Admin(){
   const [inputName, setInputName] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
   const [inputPhone, setInputPhone] = useState<string>('');
+  const [inputNewPassword, setInputNewPassword] = useState<string>('');
+  const [inputCurrPassword, setInputCurrPassword] = useState<string>('');
   const [adminInfo, setAdminInfo] = useState<Admin>({name: '', email: '', phone: null, profile_pic: ''});
 
   const [adminDelPassword, setAdminDelPassword] = useState<string>('');
@@ -80,11 +83,11 @@ function Admin(){
   const handleShowEditForm = () =>{ setShowEditForm(!showEditForm) }
   const handleCam = () =>{ setShowCamIcon(!showCamIcon) }
 
-  type Event = React.ChangeEvent<HTMLInputElement>;
-
   const handleInputNameChange = (e: Event) => { setInputName(e.target.value) };
   const handleInputEmailChange = (e: Event) => { setInputEmail(e.target.value) };
   const handleInputPhoneChange = (e: Event) => { setInputPhone(e.target.value) };
+  const handleInputNewPasswordChange = (e: Event) => { setInputNewPassword(e.target.value) };
+  const handleInputCurrPasswordChange = (e: Event) => { setInputCurrPassword(e.target.value) };
 
   const handleEdit = async () =>{
     let newData: any = {};
@@ -92,6 +95,15 @@ function Admin(){
     if(inputName !== adminInfo.name) newData.name = inputName;
     if(inputEmail !== adminInfo.email) newData.email = inputEmail;
     if(inputPhone !== adminInfo.phone) newData.phone = inputPhone;
+
+    if(inputNewPassword){
+      setInputNewPassword('');
+      newData['new_password'] = inputNewPassword;
+    }
+    if(inputCurrPassword){
+      setInputCurrPassword('');
+      newData['current_password'] = inputCurrPassword;
+    }
 
     if(newData){
       try{
@@ -198,9 +210,10 @@ function Admin(){
 
             <input type="text" name="name" placeholder="Name" value={inputName} onChange={handleInputNameChange} />
             <input type="email" name="email" placeholder="Email" value={inputEmail} onChange={handleInputEmailChange} />
-            <input type="text" name="phone" placeholder="Phone" value={inputPhone} onChange={handleInputPhoneChange} />
-            <input type="password" name="password" placeholder="New Password" />
-            <input type="password" name="password" placeholder="Current Password (required)" />
+            <input type="text" name="phone" placeholder="Phone" value={inputPhone ?? undefined} onChange={handleInputPhoneChange} />
+            <br />
+            <input type="password" name="password" placeholder="New Password" value={inputNewPassword} onChange={handleInputNewPasswordChange} />
+            <input type="password" name="password" placeholder="Current Password" value={inputCurrPassword} onChange={handleInputCurrPasswordChange} />
 
             <button onClick={handleEdit}>Edit</button>
           </div>
