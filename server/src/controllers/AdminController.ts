@@ -15,17 +15,17 @@ export async function login(req: Request, res: Response){
     if(!email || !password) return res.status(400).json({err: 'Field lefting'});
 
     if(!validator.isEmail(email)) return res.status(400).json({err: 'Invalid email or password'});
-    
+
     const admin = await Admin.findOne({email});
 
-    if(!admin || !password && bcrypt.compareSync(password, admin.password))
+    if(!admin || !bcrypt.compareSync(password, admin.password))
         return res.status(400).json({err: 'Invalid email or password'});
 
     const refreshToken = jwt.sign({adminId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
 
     const sevenDaysDate = new Date(Date.now() + 604800000);
 
-    try{ // TODO create refreshtoken helper
+    try{
         const hasRToken = await RefreshToken.findOneAndUpdate(
             {admin_id: admin.id}, {expiresin: sevenDaysDate, refresh_token: refreshToken}
         );
@@ -37,7 +37,7 @@ export async function login(req: Request, res: Response){
         return res.status(500).json({error: 'System error'});
     }
 
-    res.cookie('RefreshToken', refreshToken, {expires: sevenDaysDate}).redirect(process.env.ORIGIN_ALLOWED as string);
+    res.json({refreshToken});
 }
 
 export async function get(req: Request, res: Response){
@@ -58,9 +58,9 @@ export async function get(req: Request, res: Response){
 }
 
 export async function create(req: Request, res: Response){
-   const newAdminFields = await createAdminFilter(req.body);
+    const newAdminFields = await createAdminFilter(req.body);
 
-   if('err' in newAdminFields) return res.status(400).json({err: newAdminFields.err});
+    if('err' in newAdminFields) return res.status(400).json({err: newAdminFields.err});
 
     try{
         const admin = await Admin.create(newAdminFields);
@@ -70,7 +70,7 @@ export async function create(req: Request, res: Response){
 
             const sevenDaysDate = new Date(Date.now() + 604800000);
 
-            try{ // TODO create refreshtoken helper
+            try{
                 const hasRToken = await RefreshToken.findOneAndUpdate(
                     {admin_id: admin.id}, {expiresin: sevenDaysDate, refresh_token: refreshToken}
                 );
@@ -82,7 +82,7 @@ export async function create(req: Request, res: Response){
                 return res.status(500).json({error: 'System error'});
             }
 
-            return res.cookie('RefreshToken', refreshToken, {expires: sevenDaysDate}).redirect(process.env.ORIGIN_ALLOWED as string);
+            return res.status(201).json({refreshToken});
         }
     }catch(err){
         console.log(err);

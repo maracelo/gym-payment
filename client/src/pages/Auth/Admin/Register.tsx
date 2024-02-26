@@ -3,6 +3,7 @@ import PasswordInput from '../../../components/PasswordInput';
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
+import Event from '../../../types/ChangeEventInput';
 
 function AdminRegister(){
   const navigate = useNavigate();
@@ -16,7 +17,6 @@ function AdminRegister(){
   const cookies = new Cookies();
 
   const sendRegister = async () =>{
-    
     if(name && email && password && password_confirmation){
       
       const data = { name, email, password, password_confirmation }
@@ -32,31 +32,25 @@ function AdminRegister(){
   
       const res = await req.json();
   
-      if(res.err){
+      if('err' in res){
         setError(res.err);
-        return;
+        setTimeout(() =>{ setError('') }, 2000);
       }
-
-      cookies.set('AccessToken', res.body.token);
-      navigate('/');
+      
+      else{
+        cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
+        navigate('/');
+      }
+    }else{
+      setError('Fill all fields!');
+      setTimeout(() =>{ setError('') }, 2000);
     }
   }
 
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-    setName(e.target.value);
-  }
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-    setEmail(e.target.value);
-  }
-
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-    setPassword(e.target.value);
-  }
-
-  const handlePasswordConfirmChange = (e: React.ChangeEvent<HTMLInputElement>) =>{
-    setPasswordConfirm(e.target.value);
-  }
+  const handleNameChange = (e: Event) =>{ setName(e.target.value) }
+  const handleEmailChange = (e: Event) =>{ setEmail(e.target.value) }
+  const handlePasswordChange = (e: Event) =>{ setPassword(e.target.value) }
+  const handlePasswordConfirmChange = (e: Event) =>{ setPasswordConfirm(e.target.value) }
 
   return (
     <Container>

@@ -11,15 +11,17 @@ import useAppSelector from '../../../redux/typedUseSelectorHook';
 
 import getAccessToken from '../../../helpers/getAccessToken';
 import checkAccessToken from '../../../helpers/checkAccessToken';
+import Event from "../../../types/ChangeEventInput";
 
 function AdminLogin(){
   const navigate = useNavigate();
-  const cookie = new Cookies();
+  const cookies = new Cookies();
   const dispatch = useDispatch();
   const accessTState = useAppSelector(state => state.accessToken)
 
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [error, setError] = useState<string>('');
 
   useEffect(() =>{
     (async() =>{
@@ -27,7 +29,7 @@ function AdminLogin(){
 
       if(!checkAccessToken(accessToken)) accessToken = '';
 
-      const refreshToken = cookie.get('RefreshToken');
+      const refreshToken = cookies.get('RefreshToken');
 
       if(!accessToken && refreshToken) accessToken = await getAccessToken(refreshToken);
 
@@ -38,19 +40,50 @@ function AdminLogin(){
     })();
   }, []);
 
-  type Event = React.ChangeEvent<HTMLInputElement>;
+  const handleEmailChange = (e: Event) =>{ setEmail(e.target.value) };
+  const handlePasswordChange = (e: Event) =>{ setPassword(e.target.value) };
 
-  const handleEmailChange = (e: Event) =>{ setEmail(e.target.value) }
-  const handlePasswordChange = (e: Event) =>{ setPassword(e.target.value) }
+  const handleLogin = async () =>{ // TODO test this function
+    if(email && password){
+      
+      const data = { email, password };
+
+      const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/register', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify(data)
+      });
+  
+      const res = await req.json();
+  
+      if('err' in res){
+        setError(res.err);
+        setTimeout(() =>{ setError('') }, 2000);
+      }
+      
+      else{
+        cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
+        navigate('/');
+      }
+    }else{
+      setError('Fill all fields!');
+      setTimeout(() =>{ setError('') }, 2000);
+    }
+  }
 
   return (
     <Container>
-      <Form method='post' action={import.meta.env.VITE_API_BASE_URL + 'admin/login'}>
+      <Form>
         <Title>Admin Login</Title>
+
+        {error}
 
         <label> <input name="email" type="text" placeholder='Email' value={email} onChange={handleEmailChange}/> </label>
         <PasswordInput name='password' placeholder='Password' password={password} handlePasswordChange={handlePasswordChange} />
-        <button>Login</button>
+        <button onClick={handleLogin}>Login</button>
 
         <PassOption>
           Don't have an account yet? <Link to={import.meta.env.VITE_BASE_URL + 'admin/register'}>Create here.</Link>
