@@ -48,7 +48,7 @@ function AdminLogin(){
       
       const data = { email, password };
 
-      const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/register', {
+      const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/login', {
         method: 'post',
         headers: {
           'Content-Type': 'application/json',
