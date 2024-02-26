@@ -9,25 +9,6 @@ import getAccessToken from "../../../helpers/getAccessToken";
 import checkAccessToken from "../../../helpers/checkAccessToken";
 import Cookies from "universal-cookie";
 
-/* TODO
-  problems:
-  - I need to make a way to access admins profiles (maybe use email not id in url)
-  - 
-
-  to do
-  - finish admin profile page (test if edit password is working)
-  - turn all alerts errors or messages into a message on forms
-  - check accessToken when it's invalid
-  - change default mode to other color (maybe yellow)
-  - add an effect to darkMode change (just a fade)
-  - show how many months payment is been late
-  - new field in User (late_date)
-  - make some loading animation
-  - redo all tests in backend
-  - make unit tests in backend
-  - make tests for frontend
-*/
-
 type Admin = {
   name: string,
   email: string,
