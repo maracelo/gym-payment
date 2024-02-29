@@ -23,7 +23,7 @@ function MainRoutes(){
 
       {path: '/admin/:id', element: <Admin />},
       {path: '/admin/login', element: <AdminLogin />},
-      {path: '/admin/register', element: <AdminRegister />},
+      {path: '/admin/register', element: <AdminRegister />}
     ])
   );
 }
