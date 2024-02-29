@@ -1,14 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import Cookies from "universal-cookie";
 import { Container, Info } from "../styled";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
-import { setAccessToken } from "../../../redux/reducers/accessTokenReducer";
-
-import checkAccessToken from "../../../helpers/checkAccessToken";
-import getAccessToken from "../../../helpers/getAccessToken";
 
 type User = {
   name: string,
@@ -35,31 +29,15 @@ function User(){
   
   const [userDelPassword, setUserDelPassword] = useState<string>('');
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const cookie = new Cookies();
   
   useEffect(() =>{
     (async () =>{
-      let token: string = accessTState.accessToken;
-
-      if(!checkAccessToken(token)) token = '';
-
-      const refreshToken = cookie.get('RefreshToken');
-
-      if(!token && refreshToken){
-        token = await getAccessToken(refreshToken);
-
-        if(token === null) navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
-
-        dispatch(setAccessToken(token));
-      } 
-
-      if(token){
+      if(accessTState.accessToken){
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'user/' + id, {
           headers: {
             'method': 'get',
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + accessTState.accessToken
           }
         });
 
@@ -77,10 +55,9 @@ function User(){
           alert('Invalid User Id');
           navigate('/');
         }
-
-      }else navigate('/admin/login');
+      }
     })();
-  }, []);
+  }, [accessTState]);
 
   type Event = React.ChangeEvent<HTMLInputElement>;
 
