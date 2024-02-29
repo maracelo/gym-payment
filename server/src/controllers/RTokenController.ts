@@ -20,7 +20,7 @@ export async function accessToken(req: Request, res: Response){
 
             if(!admin) return res.status(404).json({err: 'Admin not found'});
 
-            const accessToken = jwt.sign({adminId}, process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: '1h'});
+            const accessToken = jwt.sign({adminId, name: admin.name, profile_pic: admin.profile_pic}, process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: '1h'});
         
             return res.json({accessToken});
         }
