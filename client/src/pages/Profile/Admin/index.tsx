@@ -1,13 +1,8 @@
 import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
 import { Container, Info } from "../styled";
 import { useNavigate, useParams } from "react-router-dom";
-import Cookies from "universal-cookie";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
-import { setAccessToken } from "../../../redux/reducers/accessTokenReducer";
-import getAccessToken from "../../../helpers/getAccessToken";
-import checkAccessToken from "../../../helpers/checkAccessToken";
 import Event from "../../../types/ChangeEventInput";
 
 type Admin = {
@@ -34,31 +29,15 @@ function Admin(){
   const [adminDelPassword, setAdminDelPassword] = useState<string>('');
   const accessTState = useAppSelector(state => state.accessToken);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const cookie = new Cookies();
 
   useEffect(() =>{
     (async () =>{
-      let token: string = accessTState.accessToken;
-
-      if(!checkAccessToken(token)) token = '';
-
-      const refreshToken = cookie.get('RefreshToken');
-
-      if(!token && refreshToken){
-        token = await getAccessToken(refreshToken);
-
-        if(token === null) navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
-
-        dispatch(setAccessToken(token));
-      } 
-
-      if(token){
+      if(accessTState.accessToken){
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/' + id, {
           headers: {
             'method': 'get',
             'Accept': 'application/json',
-            'Authorization': 'Bearer ' + token
+            'Authorization': 'Bearer ' + accessTState.accessToken
           }
         });
         
@@ -75,9 +54,9 @@ function Admin(){
           setInputEmail(email);
           setInputPhone(phone);
         }
-      }else navigate('/admin/login');
+      }
     })()
-  }, []);
+  }, [accessTState]);
 
   const handleShowDelForm = () =>{ setShowDelForm(!showDelForm) }
   const handleShowEditForm = () =>{ setShowEditForm(!showEditForm) }
