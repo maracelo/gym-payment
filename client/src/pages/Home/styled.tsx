@@ -37,7 +37,7 @@ export const List = styled.div`
   }
 `;
 
-type UserProps = { status: string };
+type UserProps = { $status: string };
 
 export const User = styled.li<UserProps> `
   border-right: 1px solid #fff;
@@ -81,10 +81,10 @@ export const User = styled.li<UserProps> `
 
     span{
       font-weight: bold;
-      color: ${(props) => props.status === 'late' ? '#f00' : '#0f0'};
+      color: ${(props) => props.$status === 'late' ? '#f00' : '#0f0'};
       border: 1px solid;
-      border-color: ${(props) => props.status === 'late' ? '#f00' : '#0f0'};
-      background-color: ${(props) => props.status === 'late' ? '#ff000030' : '#00ff0030'};
+      border-color: ${(props) => props.$status === 'late' ? '#f00' : '#0f0'};
+      background-color: ${(props) => props.$status === 'late' ? '#ff000030' : '#00ff0030'};
       padding: 5px;
       border-radius: 10px;
     }

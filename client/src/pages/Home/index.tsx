@@ -1,58 +1,37 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import Cookies from 'universal-cookie';
 
 import { Container, List, User } from './styled';
 import Area from '../../components/Area';
 import AddForm from '../../components/AddForm';
 
-import { setAccessToken } from '../../redux/reducers/accessTokenReducer';
 import useAppSelector from '../../redux/typedUseSelectorHook';
 
-import getAccessToken from '../../helpers/getAccessToken';
 import getUsersTodayList from '../../helpers/getUsersTodayList';
 import getUsersLateList from '../../helpers/getUsersLateList';
-import checkAccessToken from '../../helpers/checkAccessToken';
 
 function Home(){
-  const navigate = useNavigate();
-  const cookie = new Cookies();
-  
-  const dispatch = useDispatch();
   const accessTState = useAppSelector(state => state.accessToken);
 
   const [todayList, setTodayList] = useState<any>([]);
   const [lateList, setLateList] = useState<any>([]);
 
+  let todayListWindow: never | any[] = [];
+
   useEffect(() =>{
     (async () =>{
-      let token: string = accessTState.accessToken;
-
-      if(!checkAccessToken(token)) token = '';
-
-      const refreshToken = cookie.get('RefreshToken');
-
-      if(!token && refreshToken){
-        token = await getAccessToken(refreshToken);
-
-        if(token === null) navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
-
-        dispatch(setAccessToken(token));
-      } 
-
-      if(token){
-        const todayListRes = await getUsersTodayList(token);
-        if(todayListRes) setTodayList(todayListRes);
-
-        const lateListRes = await getUsersLateList(token);
-        if(lateListRes) setLateList(lateListRes);
-
-      } else navigate('/admin/login');
+      if(accessTState.accessToken){
+        if(todayList.length < 1){
+          const todayListRes = await getUsersTodayList(accessTState.accessToken);
+          if(todayListRes) setTodayList(todayListRes);
+        }
+        if(lateList.length < 1){
+          const lateListRes = await getUsersLateList(accessTState.accessToken);
+          if(lateListRes) setLateList(lateListRes);
+        }
+      }
     })();
-  }, [accessTState.accessToken]);
-
-  let todayListWindow: never | any[] = [];
+  }, [accessTState]);
 
   const handleChangeStatus = async (id: string) =>{
     const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'payment/' + id, {
@@ -103,7 +82,7 @@ function Home(){
               todayListWindow.push({id: el._id, windowOpen: false});
 
               return (
-                <User status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
+                <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                   <div>
                     <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
                       <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
@@ -128,7 +107,7 @@ function Home(){
           <ul>
             {lateList.length > 0 && lateList.map((el: any) =>(
 
-              <User status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
+              <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                 <div >
                   <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
                       <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
