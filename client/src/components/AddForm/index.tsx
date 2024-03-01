@@ -42,6 +42,11 @@ function AddForm({ setTodayList }: Props){
       body: JSON.stringify({name, email, phone, plan: vip})
     });
 
+    setName('');
+    setEmail('');
+    setPhone('');
+    setVip(false);
+
     const res = await req.json();
 
     if('user' in res){
