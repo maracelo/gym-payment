@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { Container, Info } from "../styled";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
+import ChangeEventInput from "../../../types/ChangeEventInput";
 
 type User = {
   name: string,
@@ -59,11 +60,9 @@ function User(){
     })();
   }, [accessTState]);
 
-  type Event = React.ChangeEvent<HTMLInputElement>;
-
-  const handleNameChange = (e: Event) =>{ setInputName(e.target.value) };
-  const handleEmailChange = (e: Event) =>{ setInputEmail(e.target.value) };
-  const handlePhoneChange = (e: Event) =>{ setInputPhone(e.target.value) };
+  const handleNameChange = (e: ChangeEventInput) =>{ setInputName(e.target.value) };
+  const handleEmailChange = (e: ChangeEventInput) =>{ setInputEmail(e.target.value) };
+  const handlePhoneChange = (e: ChangeEventInput) =>{ setInputPhone(e.target.value) };
   const handlePlanChange = () =>{ setInputPlan(!inputPlan) };
 
   const handleShowDelForm = () =>{ setShowDelForm(!showDelForm) };
@@ -111,7 +110,7 @@ function User(){
     }
   }
 
-  const handleChangeUserDelPassword = (e: Event) =>{ setUserDelPassword(e.target.value) }
+  const handleChangeUserDelPassword = (e: ChangeEventInput) =>{ setUserDelPassword(e.target.value) }
 
   const handleDel = async () =>{
     if(userDelPassword){

@@ -3,7 +3,7 @@ import { Container, Info } from "../styled";
 import { useNavigate, useParams } from "react-router-dom";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
-import Event from "../../../types/ChangeEventInput";
+import ChangeEventInput from "../../../types/ChangeEventInput";
 
 type Admin = {
   name: string,
@@ -62,11 +62,11 @@ function Admin(){
   const handleShowEditForm = () =>{ setShowEditForm(!showEditForm) }
   const handleCam = () =>{ setShowCamIcon(!showCamIcon) }
 
-  const handleInputNameChange = (e: Event) => { setInputName(e.target.value) };
-  const handleInputEmailChange = (e: Event) => { setInputEmail(e.target.value) };
-  const handleInputPhoneChange = (e: Event) => { setInputPhone(e.target.value) };
-  const handleInputNewPasswordChange = (e: Event) => { setInputNewPassword(e.target.value) };
-  const handleInputCurrPasswordChange = (e: Event) => { setInputCurrPassword(e.target.value) };
+  const handleInputNameChange = (e: ChangeEventInput) => { setInputName(e.target.value) };
+  const handleInputEmailChange = (e: ChangeEventInput) => { setInputEmail(e.target.value) };
+  const handleInputPhoneChange = (e: ChangeEventInput) => { setInputPhone(e.target.value) };
+  const handleInputNewPasswordChange = (e: ChangeEventInput) => { setInputNewPassword(e.target.value) };
+  const handleInputCurrPasswordChange = (e: ChangeEventInput) => { setInputCurrPassword(e.target.value) };
 
   const handleEdit = async () =>{
     let newData: any = {};
@@ -117,7 +117,7 @@ function Admin(){
     }
   };
 
-  const handleAdminDelPasswordChange = (e: Event) =>{ setAdminDelPassword(e.target.value) }
+  const handleAdminDelPasswordChange = (e: ChangeEventInput) =>{ setAdminDelPassword(e.target.value) }
   
   const handleDel = async () =>{
     if(adminDelPassword){
