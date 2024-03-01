@@ -11,7 +11,7 @@ import useAppSelector from '../../../redux/typedUseSelectorHook';
 
 import getAccessToken from '../../../helpers/getAccessToken';
 import checkAccessToken from '../../../helpers/checkAccessToken';
-import Event from "../../../types/ChangeEventInput";
+import ChangeEventInput from "../../../types/ChangeEventInput";
 
 function AdminLogin(){
   const navigate = useNavigate();
@@ -40,10 +40,10 @@ function AdminLogin(){
     })();
   }, []);
 
-  const handleEmailChange = (e: Event) =>{ setEmail(e.target.value) };
-  const handlePasswordChange = (e: Event) =>{ setPassword(e.target.value) };
+  const handleEmailChange = (e: ChangeEventInput) =>{ setEmail(e.target.value) };
+  const handlePasswordChange = (e: ChangeEventInput) =>{ setPassword(e.target.value) };
 
-  const handleLogin = async () =>{ // TODO test this function
+  const handleLogin = async () =>{
     if(email && password){
       
       const data = { email, password };

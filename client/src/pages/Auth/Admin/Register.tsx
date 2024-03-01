@@ -3,7 +3,7 @@ import PasswordInput from '../../../components/PasswordInput';
 import { Link, useNavigate } from 'react-router-dom';
 import React, { useState } from 'react';
 import Cookies from 'universal-cookie';
-import Event from '../../../types/ChangeEventInput';
+import ChangeEventInput from '../../../types/ChangeEventInput';
 
 function AdminRegister(){
   const navigate = useNavigate();
@@ -47,10 +47,10 @@ function AdminRegister(){
     }
   }
 
-  const handleNameChange = (e: Event) =>{ setName(e.target.value) }
-  const handleEmailChange = (e: Event) =>{ setEmail(e.target.value) }
-  const handlePasswordChange = (e: Event) =>{ setPassword(e.target.value) }
-  const handlePasswordConfirmChange = (e: Event) =>{ setPasswordConfirm(e.target.value) }
+  const handleNameChange = (e: ChangeEventInput) =>{ setName(e.target.value) }
+  const handleEmailChange = (e: ChangeEventInput) =>{ setEmail(e.target.value) }
+  const handlePasswordChange = (e: ChangeEventInput) =>{ setPassword(e.target.value) }
+  const handlePasswordConfirmChange = (e: ChangeEventInput) =>{ setPasswordConfirm(e.target.value) }
 
   return (
     <Container>

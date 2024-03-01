@@ -3,6 +3,7 @@ import React, { Dispatch, useState } from "react";
 import { Container, Warning } from './styled';
 import useAppSelector from "../../redux/typedUseSelectorHook";
 import getUsersTodayList from '../../helpers/getUsersTodayList';
+import ChangeEventInput from "../../types/ChangeEventInput";
 
 type Props = {
   setTodayList: Dispatch<any>
@@ -52,11 +53,9 @@ function AddForm({ setTodayList }: Props){
     }else if ('err' in res) handleSetWarning(res.err, 'err');
   }
 
-  type Event = React.ChangeEvent<HTMLInputElement>;
-
-  const handleNameChange = (e: Event) =>{ setName(e.target.value); }
-  const handleEmailChange = (e: Event) =>{ setEmail(e.target.value); }
-  const handlePhoneChange = (e: Event) =>{ setPhone(e.target.value); }
+  const handleNameChange = (e: ChangeEventInput) =>{ setName(e.target.value); }
+  const handleEmailChange = (e: ChangeEventInput) =>{ setEmail(e.target.value); }
+  const handlePhoneChange = (e: ChangeEventInput) =>{ setPhone(e.target.value); }
   const handleVipChange = () =>{ setVip(!vip); }
 
   return (

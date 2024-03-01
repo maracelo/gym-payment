@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
+import ChangeEventInput from "./../types/ChangeEventInput";
 
 type Props = {
   name: string,
   placeholder?: string,
   password: string,
-  handlePasswordChange: (e: React.ChangeEvent<HTMLInputElement>) => void
+  handlePasswordChange: (e: ChangeEventInput) => void
 };
 
 function Eye({ name, placeholder, password, handlePasswordChange }: Props){
