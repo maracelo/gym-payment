@@ -64,13 +64,13 @@ function AddForm({ setTodayList }: Props){
       {errWarning && (<Warning type={'err'}>{errWarning}</Warning>)}
 
       {/* <img src="http://localhost:3000/public/assets/images/default.png" alt="Default Profile Image" /> */} {/* TODO future implementation */}
-      <div>
+      <form onSubmit={(e: any) =>{e.preventDefault()}}>
         <input type="text" name="name" placeholder="Name" value={name} onChange={handleNameChange} />
         <input type="email" name="email" placeholder="Email" value={email} onChange={handleEmailChange} />
         <input type="phone" name="phone" placeholder="Phone (optional)" value={phone} onChange={handlePhoneChange} />
         <label><input type="checkbox" name="vip" placeholder="" checked={vip} onChange={handleVipChange} /> VIP PLAN </label>
         <button onClick={handleCreateUser}>Create User</button>
-      </div>
+      </form>
     </Container>
   );
 }

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 function UserLogin(){
   return (
     <Container>
-      <Form>
+      <Form onSubmit={(e: any) =>{e.preventDefault()}}>
         <Title>User Login</Title>
     
         <label> <input type="text" placeholder='Email' /> </label>
