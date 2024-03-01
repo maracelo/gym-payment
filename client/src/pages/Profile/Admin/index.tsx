@@ -182,7 +182,7 @@ function Admin(){
         }
 
         <div id="editForm" className="formContainer" style={{display: showEditForm ? 'flex' : 'none'}}>
-          <div className="form">
+          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
             <p className="X"><span onClick={handleShowEditForm}>X</span></p>
 
             <h4>Change Admin's information below</h4>
@@ -195,11 +195,11 @@ function Admin(){
             <input type="password" name="password" placeholder="Current Password" value={inputCurrPassword} onChange={handleInputCurrPasswordChange} />
 
             <button onClick={handleEdit}>Edit</button>
-          </div>
+          </form>
         </div>
 
         <div id="delForm" className="formContainer" style={{display: showDelForm ? 'flex' : 'none'}}>
-          <div className="form">
+          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
             <p className="X"><span onClick={handleShowDelForm}>X</span></p>
 
             <h4>Do you really want to delete your Admin?</h4>
@@ -207,7 +207,7 @@ function Admin(){
             <input type="password" name="password" placeholder="Password" value={adminDelPassword} onChange={handleAdminDelPasswordChange} />
 
             <button onClick={handleDel}>Delete</button>
-          </div>
+          </form>
         </div>
       </div>
     </Container>

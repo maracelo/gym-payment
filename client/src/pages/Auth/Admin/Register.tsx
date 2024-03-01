@@ -54,7 +54,7 @@ function AdminRegister(){
 
   return (
     <Container>
-      <Form>
+      <Form onSubmit={(e: any) =>{e.preventDefault()}}>
         <Title>Admin Register</Title>
 
         {error}

@@ -76,7 +76,7 @@ function AdminLogin(){
 
   return (
     <Container>
-      <Form>
+      <Form onSubmit={(e: any) =>{e.preventDefault()}}>
         <Title>Admin Login</Title>
 
         {error}

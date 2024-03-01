@@ -175,7 +175,7 @@ function User(){
         }
 
         <div id="editForm" className="formContainer" style={{display: showEditForm ? 'flex' : 'none'}}>
-          <div className="form">
+          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
             <p className="X"><span onClick={handleShowEditForm}>X</span></p>
 
             <h4>Change User's information below</h4>
@@ -189,11 +189,11 @@ function User(){
             </label>
 
             <button onClick={handleEdit}>Edit</button>
-          </div>
+          </form>
         </div>
 
         <div id="delForm" className="formContainer" style={{display: showDelForm ? 'flex' : 'none'}}>
-          <div className="form">
+          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
             <p className="X"><span onClick={handleShowDelForm}>X</span></p>
 
             <h4>Do you really want to delete this User?</h4>
@@ -201,7 +201,7 @@ function User(){
             <input type="password" name="password" placeholder="Admin's Password" value={userDelPassword} onChange={handleChangeUserDelPassword} />
 
             <button onClick={handleDel}>Delete</button>
-          </div>
+          </form>
         </div>
       </div>
     </Container>

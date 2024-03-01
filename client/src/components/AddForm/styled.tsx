@@ -13,7 +13,7 @@ export const Container = styled.div`
     clip-path: circle(50% at 50% 50%);
   }
 
-  div{
+  form{
     display: flex;
     flex-direction: column;
     margin: 10px;

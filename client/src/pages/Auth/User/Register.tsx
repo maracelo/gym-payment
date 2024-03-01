@@ -1,12 +1,11 @@
 import { Title, Container, Form, PassOption } from '../styled';
 import PasswordInput from '../../../components/PasswordInput';
 import { Link } from 'react-router-dom';
-import useAppSelector from '../../../redux/typedUseSelectorHook';
 
 function UserRegister(){
   return (
     <Container>
-      <Form>
+      <Form onSubmit={(e: any) =>{e.preventDefault()}}>
         <Title>User Register</Title>
 
         <label> <input type="text" name='name' placeholder='Name' /> </label>
