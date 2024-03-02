@@ -45,7 +45,7 @@ export const Container = styled.div`
       font-weight: bold;
       font-size: 20px;
       padding: 10px;
-      border: none;
+      border: 2px solid #204a80;
       outline: none;
       cursor: pointer;
       transition: .5s;
