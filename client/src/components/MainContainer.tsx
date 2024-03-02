@@ -29,7 +29,7 @@ const MainContainer = styled.div<Props>`
     left: 0;
     top: 0;
     z-index: -1;
-    background-color: ${(props) => props.$dark === 'true' ? '#091d3bb9' : '#30538bb8'};
+    background-color: ${(props) => props.$dark === 'true' ? '#091d3bb9' : '#006d64b8'};
   }
 
   @media(max-width: 800px){
