@@ -30,6 +30,7 @@ const MainContainer = styled.div<Props>`
     top: 0;
     z-index: -1;
     background-color: ${(props) => props.$dark === 'true' ? '#091d3bb9' : '#006d64b8'};
+    transition: .3s;
   }
 
   @media(max-width: 800px){
