@@ -8,6 +8,7 @@ import useAppSelector from '../../../redux/typedUseSelectorHook';
 import { jwtDecode } from 'jwt-decode';
 import { setAccessToken } from '../../../redux/reducers/accessTokenReducer';
 import Cookies from 'universal-cookie';
+import SearchBar from '../../SearchBar';
 
 function Header(){
   const darkState = useAppSelector((state) => state.darkMode);
@@ -57,7 +58,7 @@ function Header(){
     setShowLogedAdminBox(!showLogedAdminBox);
   };
 
-  const handleAdminIcon = () =>{
+  const logedPage = () =>{
     const arr = document.location.href.split('/');
 
     return arr[arr.length - 1] === 'login' || arr[arr.length - 1] === 'register' ? false : true;
@@ -75,8 +76,9 @@ function Header(){
         <Title>GYM</Title>
       </Link>
       <nav>
+        {logedPage() && <SearchBar/>}
         <Dark onClick={handleTheme} src={import.meta.env.VITE_BASE_URL + `public/assets/images/${dark ? 'dark' : 'light'}.png`} />
-        {handleAdminIcon() &&
+        {logedPage() &&
           <>
             <LogedAdminIcon
               id="logedAdminIcon" className={showLogedAdminBox ? '' : 'closed'}
