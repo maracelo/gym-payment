@@ -1,7 +1,8 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
 
-import { Container, List, User } from './styled';
+import { Container, List, User, SearchResult } from './styled';
 import Area from '../../components/Area';
 import AddForm from '../../components/AddForm';
 
@@ -9,9 +10,14 @@ import useAppSelector from '../../redux/typedUseSelectorHook';
 
 import getUsersTodayList from '../../helpers/getUsersTodayList';
 import getUsersLateList from '../../helpers/getUsersLateList';
+import getSearchList from '../../helpers/getSearchList';
+import { setSearchList } from '../../redux/reducers/searchListReducer';
 
 function Home(){
+  const dispatch = useDispatch();
   const accessTState = useAppSelector(state => state.accessToken);
+  const searchState = useAppSelector(state => state.search);
+  const searchListState = useAppSelector(state => state.searchList);
 
   const [todayList, setTodayList] = useState<any>([]);
   const [lateList, setLateList] = useState<any>([]);
@@ -51,7 +57,11 @@ function Home(){
   
       const lateListRes = await getUsersLateList(token);
       if(lateListRes) setLateList(lateListRes);
-    
+
+      if(searchState.search){
+        const searchList = await getSearchList(searchState.search, accessTState.accessToken);
+        if(searchList) dispatch( setSearchList(searchList) );
+      }
     }else if('err' in res){
       alert(res.err);
     }
@@ -73,63 +83,94 @@ function Home(){
 
   return (
     <Container>
-      <Area>
-        <h1>TODAY</h1>
+      {searchListState.searchList.length > 0 &&
+        <SearchResult>
+          <h1>Results</h1>
 
-        <List>
-          <ul>
-            {todayList.length > 0 && todayList.map((el: any) =>{
-              todayListWindow.push({id: el._id, windowOpen: false});
+          <List>
+            <ul>
+              {searchListState.searchList.length > 0 && searchListState.searchList.map((el: any) =>(
 
-              return (
                 <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
-                  <div>
+                  <div >
                     <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
-                      <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                        <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                     </Link>
                     <h4>{el.name}</h4>
-                    <p>Staus:&nbsp;<span>{ el['payment_status'] === 'payed' ? 'Payed' : 'Late' }</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                    <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
                     <div></div>
                     <div></div>
                     <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
                   </div>
                 </User>
-              )
-            })}
-          </ul>
-        </List>
-      </Area>
-      
-      <Area>
-        <h1>LATE</h1>
+              ))}
 
-        <List>
-          <ul>
-            {lateList.length > 0 && lateList.map((el: any) =>(
+            </ul>
+          </List>
+        </SearchResult>
+      }
 
-              <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
-                <div >
-                  <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
-                      <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
-                  </Link>
-                  <h4>{el.name}</h4>
-                  <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
-                  <div></div>
-                  <div></div>
-                  <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
-                </div>
-              </User>
-            ))}
+      {searchListState.searchList.length === 0 &&
+        <>
+          <Area>
+            <h1>TODAY</h1>
 
-          </ul>
-        </List>
-      </Area>
+            <List>
+              <ul>
+                {todayList.length > 0 && todayList.map((el: any) =>{
+                  todayListWindow.push({id: el._id, windowOpen: false});
 
-      <Area>
-        <h1>ADD</h1>
+                  return (
+                    <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
+                      <div>
+                        <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
+                          <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                        </Link>
+                        <h4>{el.name}</h4>
+                        <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                        <div></div>
+                        <div></div>
+                        <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
+                      </div>
+                    </User>
+                  )
+                })}
+              </ul>
+            </List>
+          </Area>
+          
+          <Area>
+            <h1>LATE</h1>
 
-        <AddForm setTodayList={setTodayList} />
-      </Area>
+            <List>
+              <ul>
+                {lateList.length > 0 && lateList.map((el: any) =>(
+
+                  <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
+                    <div >
+                      <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
+                          <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                      </Link>
+                      <h4>{el.name}</h4>
+                      <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                      <div></div>
+                      <div></div>
+                      <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
+                    </div>
+                  </User>
+                ))}
+
+              </ul>
+            </List>
+          </Area>
+
+          <Area>
+            <h1>ADD</h1>
+
+            <AddForm setTodayList={setTodayList} />
+          </Area>
+        </>
+      }
     </Container>
   );
 }

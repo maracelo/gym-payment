@@ -25,6 +25,7 @@ export const Header = styled.header`
 
     img{
       display: inline-block;
+      transform: translateZ(0);
     }
   }
 `;

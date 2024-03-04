@@ -4,7 +4,8 @@ export const Container = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 10px;
-  height: fit-content;
+  height: 100%;
+  width: 100%;
   justify-content: center;
   align-items: center;
 
@@ -142,5 +143,19 @@ export const User = styled.li<UserProps> `
     @media(min-height: 1500px){
       font-size: 22px;
     }
+  }
+`;
+
+export const SearchResult = styled.div`
+  padding: 10px;
+  border: 2px solid #fff;
+  width: 100%; 
+  height: 500px;
+  max-height: 500px;
+  grid-column: span 3;
+
+  h1{
+  font-size: 40px;
+  color: #fff;
   }
 `;
