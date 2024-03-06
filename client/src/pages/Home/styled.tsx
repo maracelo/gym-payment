@@ -38,9 +38,37 @@ export const List = styled.div`
   }
 `;
 
-type UserProps = { $status: string };
+type UserProps = { $status: 'payed' | 'late' };
 
-export const User = styled.li<UserProps> `
+export const User = styled.li<UserProps>`
+  @keyframes shine{
+    0%{
+      background: -webkit-linear-gradient(-45deg, #665700, gold, #fff, gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    };
+    25%{
+      background: -webkit-linear-gradient(-45deg, gold, #665700, gold, #fff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    };
+    50%{
+      background: -webkit-linear-gradient(-45deg, #fff, gold, #665700, gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    };
+    75%{
+      background: -webkit-linear-gradient(-45deg, gold, #fff, gold, #665700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    };
+    100%{
+      background: -webkit-linear-gradient(-45deg, #665700, gold, #fff, gold);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    };
+  }
+
   border-right: 1px solid #fff;
   border-bottom: 1px solid #fff;
   padding: 5px;
@@ -49,6 +77,16 @@ export const User = styled.li<UserProps> `
 
   &:hover{
     background-color: #ffffff34;
+  }
+
+  h4{
+    color: '#fff';
+  }
+
+  h4 p.gold{
+    color: #fff;
+    animation: shine 1s infinite linear;
+    transition: 1s;
   }
 
   a{
