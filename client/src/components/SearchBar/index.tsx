@@ -25,7 +25,10 @@ function SearchBar(){
     });
   }, []);
 
-  const handleShowSearchBar = () =>{ setShowSearchBar(!showSearchBar) };
+  const handleShowSearchBar = () =>{
+    setShowSearchBar(!showSearchBar);
+    (document.querySelector('#searchBar') as HTMLElement).focus();
+  };
 
   const handleSearchBarChange = async (e: ChangeEventInput) =>{
     setInputSearchValue(e.target.value);
