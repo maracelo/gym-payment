@@ -80,9 +80,11 @@ export const User = styled.li<UserProps>`
   }
 
   h4{
+    display: flex;
     color: '#fff';
+    justify-content: center;
   }
-
+  
   h4 p.gold{
     color: #fff;
     animation: shine 1s infinite linear;
@@ -118,8 +120,7 @@ export const User = styled.li<UserProps>`
       font-weight: bold;
 
       &.status{
-        display: flex;
-        justify-content: center;
+        justify-content: flex-end;
       }
     }
 
@@ -148,7 +149,7 @@ export const User = styled.li<UserProps>`
     .changeStatusContainer{
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-end;
 
       button{
         background-color: #0000007e;
@@ -163,7 +164,6 @@ export const User = styled.li<UserProps>`
         transition: .2s;
         left: 0;
         right: 0;
-        white-space: nowrap;
       }
   
       .showBtn{

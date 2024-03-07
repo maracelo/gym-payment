@@ -114,7 +114,7 @@ function Home(){
                         <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                     </Link>
                     <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
-                    <p className='status'>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                    <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
                     <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
                     <div></div>
                     <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
@@ -144,7 +144,7 @@ function Home(){
                           <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                         </Link>
                         <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
-                        <p className='status'>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                        <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
                         <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
                         <div></div>
                         <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
@@ -169,7 +169,7 @@ function Home(){
                           <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                       </Link>
                       <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
-                      <p className='status'>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                      <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
                       <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
                       <div></div>
                       <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
