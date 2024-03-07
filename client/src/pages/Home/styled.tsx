@@ -73,10 +73,10 @@ export const User = styled.li<UserProps>`
   border-bottom: 1px solid #fff;
   padding: 5px;
   margin: 5px;
-  transition: .5s;
+  transition: .3s;
 
   &:hover{
-    background-color: #ffffff34;
+    background-color: #ffffff45;
   }
 
   h4{
@@ -116,16 +116,33 @@ export const User = styled.li<UserProps>`
       display: flex;
       align-items: center;
       font-weight: bold;
+
+      &.status{
+        display: flex;
+        justify-content: center;
+      }
     }
 
     span{
       font-weight: bold;
-      color: ${(props) => props.$status === 'late' ? '#f00' : '#0f0'};
+      color: ${(props) => props.$status === 'late' ? '#a7a7a7' : '#0f0'};
       border: 1px solid;
-      border-color: ${(props) => props.$status === 'late' ? '#f00' : '#0f0'};
-      background-color: ${(props) => props.$status === 'late' ? '#ff000030' : '#00ff0030'};
+      border-color: ${(props) => props.$status === 'late' ? '#a7a7a7' : '#0f0'};
+      background-color: ${(props) => props.$status === 'late' ? '#0000002e' : '#00ff0030'};
       padding: 5px;
       border-radius: 10px;
+    }
+
+    p.bottom{
+      font-weight: normal;
+      font-size: 0;
+      transition: .2s;
+      width: 100%;
+
+      &.show{
+        font-size: 13px;
+        transition: .2s;
+      }
     }
 
     .changeStatusContainer{
@@ -143,9 +160,10 @@ export const User = styled.li<UserProps>`
         margin: 0;
         border: none;
         cursor: pointer;
-        transition: .2s linear;
+        transition: .2s;
         left: 0;
         right: 0;
+        white-space: nowrap;
       }
   
       .showBtn{
@@ -156,7 +174,7 @@ export const User = styled.li<UserProps>`
         border: 1px solid #ffffff7c;
         font-size: 12px;
         text-align: center;
-        transition: .2s linear;
+        transition: .2s;
       }
     }
 

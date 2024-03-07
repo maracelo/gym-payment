@@ -9,11 +9,13 @@ import getTodayDay from "../helpers/getTodayDay";
 
 export async function getTodayList(req: Request, res: Response){
     try{
-        const todayUsers = await User.find({payment_day: getTodayDay()});
+        const todayUsers = await User.aggregate([{
+            $match: {$expr: {$eq: [{$dayOfMonth: '$createdAt'}, getTodayDay()]} }
+        }]);
         return res.json({todayUsers});
     }catch(err){
         console.log(err);
-        res.status(500).json({err: {err: 'System error'}})
+        res.status(500).json({err: {err: 'System error'}});
     }
 }
 

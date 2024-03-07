@@ -8,9 +8,21 @@ export async function updatePaymentStatus(req: Request, res: Response){
         const user = await User.findOne({_id: id});
 
         if(user){
-            const update = await User.findOneAndUpdate(
-                {_id: id}, {payment_status: user.payment_status === 'late' ? 'payed' : 'late'}
-            );
+            let payment_status;
+            let payment_late_date;
+
+            if(user.payment_status === 'late'){
+                payment_status = 'payed';
+                payment_late_date = null;
+            }else{
+                payment_status = 'late';
+                payment_late_date = new Date();
+            }
+
+            const update = await User.findOneAndUpdate( {_id: id}, {
+                payment_status: payment_status,
+                payment_late_date: payment_late_date
+            });
     
             if(update) return res.json({success: 'payment status updated'});
         }
