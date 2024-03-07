@@ -69,9 +69,11 @@ function Home(){
 
   const handleOpenUserWindow = (e: any) =>{
     const btn = e.target.querySelector('button');
+    const text = e.target.querySelector('.bottom');
 
     if(btn){
       btn.className === 'showBtn' ? btn.className = '' : btn.className = 'showBtn';
+      text.classList.contains('show') ? text.classList.remove('show') : text.classList.add('show');
   
       const triangle = e.target.querySelector('.triangle');
   
@@ -79,6 +81,21 @@ function Home(){
         triangle.innerHTML.replace('▼', '▲') :
         triangle.innerHTML.replace('▲', '▼');
     }
+  }
+
+  const handlePaymentLateDate = (date: string): string | null =>{
+    if(date){
+      const dateFormated = new Date(date);
+      let day: string = (dateFormated.getDate()).toString();
+      day = parseInt(day) < 10 ? '0' + day : day;
+      let month: string = (dateFormated.getMonth() + 1).toString();
+      month = parseInt(month) < 10 ? '0' + month : month;
+      let year = dateFormated.getFullYear();
+  
+      return `Late since:\n${day}/${month}/${year}`;
+    }
+
+    return null;
   }
 
   return (
@@ -97,8 +114,8 @@ function Home(){
                         <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                     </Link>
                     <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
-                    <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
-                    <div></div>
+                    <p className='status'>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                    <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
                     <div></div>
                     <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
                   </div>
@@ -127,8 +144,8 @@ function Home(){
                           <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                         </Link>
                         <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
-                        <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
-                        <div></div>
+                        <p className='status'>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                        <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
                         <div></div>
                         <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
                       </div>
@@ -152,8 +169,8 @@ function Home(){
                           <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
                       </Link>
                       <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
-                      <p>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
-                      <div></div>
+                      <p className='status'>Staus:&nbsp;<span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                      <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
                       <div></div>
                       <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
                     </div>
