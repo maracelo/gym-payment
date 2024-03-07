@@ -51,7 +51,7 @@ function User(){
           setInputName(name);
           setInputEmail(email);
           setInputPhone(phone);
-          setInputPlan(plan);
+          setInputPlan(plan === 'vip' ? true : false);
         }else{
           alert('Invalid User Id');
           navigate('/');
