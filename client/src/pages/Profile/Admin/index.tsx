@@ -30,6 +30,8 @@ function Admin(){
   const accessTState = useAppSelector(state => state.accessToken);
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() =>{
     (async () =>{
       if(accessTState.accessToken){
@@ -53,6 +55,7 @@ function Admin(){
           setInputName(name);
           setInputEmail(email);
           setInputPhone(phone);
+          setLoading(false);
         }
       }
     })()
@@ -158,10 +161,13 @@ function Admin(){
 
   return (
     <Container>
+
       <div className="infoSpace">
+        {loading && <div className="loading"></div>}
+
         <div onMouseEnter={handleCam} onMouseLeave={handleCam} onClick={handleClickProPic} className="profile_pic">
-          <input id="pic_file" type="file" />
-          {adminInfo.profile_pic && 
+          <input id="pic_file" type="file" />      
+          {adminInfo.profile_pic && !loading &&
             <img
               id="profile_pic"
               src={import.meta.env.VITE_BASE_URL + 'public/assets/images/' + adminInfo.profile_pic}
@@ -171,7 +177,7 @@ function Admin(){
           <div id="camera" style={{display: showCamIcon ? 'flex' : 'none'}}><img src="http://localhost:3000/public/assets/images/camera.png" alt="Admin's profile picture" /></div>
         </div>
 
-        {adminInfo.email &&
+        {adminInfo.email && !loading &&
           <Info>
             <li>Name: {adminInfo.name}</li>
             <li>Email: {adminInfo.email}</li>

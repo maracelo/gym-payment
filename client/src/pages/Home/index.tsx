@@ -21,6 +21,7 @@ function Home(){
 
   const [todayList, setTodayList] = useState<any>([]);
   const [lateList, setLateList] = useState<any>([]);
+  const [loading, setLoading] = useState<boolean>(true);
 
   let todayListWindow: never | any[] = [];
 
@@ -29,11 +30,17 @@ function Home(){
       if(accessTState.accessToken){
         if(todayList.length < 1){
           const todayListRes = await getUsersTodayList(accessTState.accessToken);
-          if(todayListRes) setTodayList(todayListRes);
+          if(todayListRes){
+            setTodayList(todayListRes);
+            setLoading(false);
+          }
         }
         if(lateList.length < 1){
           const lateListRes = await getUsersLateList(accessTState.accessToken);
-          if(lateListRes) setLateList(lateListRes);
+          if(lateListRes){
+            setLateList(lateListRes);
+            setLoading(false);
+          }
         }
       }
     })();
@@ -132,6 +139,10 @@ function Home(){
           <Area>
             <h1>TODAY</h1>
 
+          {loading && 
+            <div className='loading'></div>
+          }
+          {!loading && 
             <List>
               <ul>
                 {todayList.length > 0 && todayList.map((el: any) =>{
@@ -154,31 +165,37 @@ function Home(){
                 })}
               </ul>
             </List>
+          }
           </Area>
           
           <Area>
             <h1>LATE</h1>
 
-            <List>
-              <ul>
-                {lateList.length > 0 && lateList.map((el: any) =>(
+            {loading &&
+              <div className='loading'></div>
+            }
+            {!loading &&
+              <List>
+                <ul>
+                  {lateList.length > 0 && lateList.map((el: any) =>(
 
-                  <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
-                    <div >
-                      <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
-                          <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
-                      </Link>
-                      <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
-                      <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
-                      <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
-                      <div></div>
-                      <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
-                    </div>
-                  </User>
-                ))}
+                    <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
+                      <div >
+                        <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
+                            <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                        </Link>
+                        <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
+                        <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
+                        <p className='bottom'>{el['payment_status'] === 'late' ? handlePaymentLateDate(el['payment_late_date']) : ''}</p>
+                        <div></div>
+                        <div className="changeStatusContainer"><button onClick={() => handleChangeStatus(el._id)}>Change Status</button></div>
+                      </div>
+                    </User>
+                  ))}
 
-              </ul>
-            </List>
+                </ul>
+              </List>
+            }
           </Area>
 
           <Area>
