@@ -307,3 +307,13 @@ export const Info = styled.ul`
     }
   }
 `;
+
+type WarningMessageProps = {$warning: 'err' | 'success'};
+
+export const WarningMessage = styled.div<WarningMessageProps>`
+  background-color: #0000007d;
+  color: ${props => props.$warning === 'err' ? 'red' : 'green'};
+  padding: 5px;
+  margin-bottom: 20px;
+  border: 2px solid ${props => props.$warning === 'err' ? 'red' : 'green'};
+`;

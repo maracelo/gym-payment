@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Info } from "../styled";
+import { Container, Info, WarningMessage } from "../styled";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
 import ChangeEventInput from "../../../types/ChangeEventInput";
@@ -15,6 +15,7 @@ type User = {
 
 function User(){
   const { id } = useParams();
+  const navigate = useNavigate();
   
   const [showDelForm, setShowDelForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -28,8 +29,12 @@ function User(){
   const [inputPhone, setInputPhone] = useState<string>(userInfo.phone ?? '');
   const [inputPlan, setInputPlan] = useState<boolean>(userInfo.plan === 'vip' ? true : false);
   
+  type warningObj = {msg: string, type: 'err' | 'success'}
+
+  const [editWarningMessage, setEditWarningMessage] = useState<warningObj>({msg: '', type: 'err'});
+  const [delWarningMessage, setDelWarningMessage] = useState<warningObj>({msg: '', type: 'err'});
+
   const [userDelPassword, setUserDelPassword] = useState<string>('');
-  const navigate = useNavigate();
   
   useEffect(() =>{
     (async () =>{
@@ -70,6 +75,8 @@ function User(){
   const handleCam = () =>{ setShowCamIcon(!showCamIcon) };
 
   const handleEdit = async () =>{
+    setEditWarningMessage({msg: '', type: 'err'});
+
     let newData: any = {};
 
     if(inputName !== userInfo.name) newData.name = inputName;
@@ -90,9 +97,10 @@ function User(){
   
         const res = await req.json();
   
-        if('err' in res) alert(res.err);
+        if('err' in res) setEditWarningMessage({msg: res.err, type: 'err'});
+
         else{
-          alert('User Updated.');
+          setEditWarningMessage({msg: 'User Updated', type: 'success'});
 
           const {name, email, phone, plan, profile_pic} = res.user;
           
@@ -103,10 +111,13 @@ function User(){
           setUserInfo({name, email, phone, plan, profile_pic});
         }
       }catch(err){
-        alert('It happend an error while trying to update User.');
+        setEditWarningMessage({msg: 'It happend an error while trying to update User', type: 'err'});
       }
     }else{
-      alert('User not Updated! You need to change and fill one or more fields.');
+      setEditWarningMessage({
+        msg: 'User not Updated! You need to change and fill one or more fields',
+        type: 'err'
+      });
     }
   }
 
@@ -114,6 +125,8 @@ function User(){
 
   const handleDel = async () =>{
     if(userDelPassword){
+      setEditWarningMessage({msg: '', type: 'err'});
+
       let password = userDelPassword;
       setUserDelPassword('');
       
@@ -129,15 +142,17 @@ function User(){
   
         const res = await req.json();
 
-        if('err' in res) alert('Error: ' + res.err);
+        if('err' in res) setDelWarningMessage({msg: res.err, type: 'err'});
         
         else{
           alert('User Deleted');
           navigate('/');
         }
       }catch(err){
-        alert('It happened an error while trying to delete User');
+        setDelWarningMessage({msg: 'It happened an error while trying to delete User', type: 'err'});
       }
+    }else{
+      setDelWarningMessage({msg: 'Password is empty', type: 'err'});
     }
   }
 
@@ -180,6 +195,8 @@ function User(){
 
             <h4>Change User's information below</h4>
 
+            {editWarningMessage.msg && <WarningMessage $warning={editWarningMessage.type}>{editWarningMessage.msg}</WarningMessage>}
+
             <input type="text" name="name" placeholder="Name" value={inputName} onChange={handleNameChange} />
             <input type="email" name="email" placeholder="Email" value={inputEmail} onChange={handleEmailChange} />
             <input type="text" name="phone" placeholder="Phone" value={inputPhone} onChange={handlePhoneChange} />
@@ -197,6 +214,8 @@ function User(){
             <p className="X"><span onClick={handleShowDelForm}>X</span></p>
 
             <h4>Do you really want to delete this User?</h4>
+
+            {delWarningMessage.msg && <WarningMessage $warning={delWarningMessage.type}>{delWarningMessage.msg}</WarningMessage>}
             
             <input type="password" name="password" placeholder="Admin's Password" value={userDelPassword} onChange={handleChangeUserDelPassword} />
 
