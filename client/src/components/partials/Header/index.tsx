@@ -11,14 +11,18 @@ import Cookies from 'universal-cookie';
 import SearchBar from '../../SearchBar';
 
 function Header(){
-  const darkState = useAppSelector((state) => state.darkMode);
-  const [dark, setDark] = useState<boolean>(darkState.dark);
   const dispatch = useDispatch();
-  const accessTState = useAppSelector(state => state.accessToken);
-  const [admin, setAdmin] = useState({adminId: '', name: '', profile_pic: ''});
-  const [showLogedAdminBox, setShowLogedAdminBox] = useState<boolean>(false);
   const navigate = useNavigate();
   const cookies = new Cookies();
+
+  const darkState = useAppSelector((state) => state.darkMode);
+  const [dark, setDark] = useState<boolean>(darkState.dark);
+  const accessTState = useAppSelector(state => state.accessToken);
+  
+  const [admin, setAdmin] = useState({adminId: '', name: '', profile_pic: ''});
+  const [showLogedAdminBox, setShowLogedAdminBox] = useState<boolean>(false);
+
+  const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() =>{
     document.body.addEventListener('click', (e: any) =>{
@@ -43,6 +47,7 @@ function Header(){
             name: decoded.name,
             profile_pic: import.meta.env.VITE_BASE_URL + 'public/assets/images/' + decoded.profile_pic
           });
+          setLoading(false);
         }
       }catch(err){}
     })();
@@ -78,7 +83,10 @@ function Header(){
       <nav>
         {logedPage() && <SearchBar/>}
         <Dark onClick={handleTheme} src={import.meta.env.VITE_BASE_URL + `public/assets/images/${dark ? 'dark' : 'light'}.png`} />
-        {logedPage() &&
+        {logedPage() && loading &&
+          <div className='loading'></div>
+        }
+        {logedPage() && !loading &&
           <>
             <LogedAdminIcon
               id="logedAdminIcon" className={showLogedAdminBox ? '' : 'closed'}

@@ -6,6 +6,18 @@ export const Title = styled.h1`
 `;
 
 export const Header = styled.header`
+  @keyframes loadingAnim{
+    0%{
+      background-image: -webkit-linear-gradient(left, #ffffff9e, transparent);
+    }
+    50%{
+      background-image: -webkit-linear-gradient(left, transparent, #ffffff9e, #ffffff9e, transparent);
+    }
+    100%{
+      background-image: -webkit-linear-gradient(left, transparent, #ffffff9e);
+    }
+  }
+
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,6 +39,15 @@ export const Header = styled.header`
       display: inline-block;
       transform: translateZ(0);
     }
+  }
+
+  .loading{
+    background-color: transparent;
+    background-image: -webkit-linear-gradient(left, #fff, transparent);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    animation: .5s loadingAnim infinite linear;
   }
 `;
 

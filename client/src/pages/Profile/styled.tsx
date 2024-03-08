@@ -1,12 +1,32 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
+  @keyframes loadingAnim{
+    0%{
+      background-image: -webkit-linear-gradient(left, #ffffff9e, transparent);
+    }
+    50%{
+      background-image: -webkit-linear-gradient(left, transparent, #ffffff9e, #ffffff9e, transparent);
+    }
+    100%{
+      background-image: -webkit-linear-gradient(left, transparent, #ffffff9e);
+    }
+  }
+
   color: #fff;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 20px;
   height: 100%;
+
+  .loading{
+    width: 300px;
+    height: 300px;
+    background-color: transparent;
+    background-image: -webkit-linear-gradient(left, #fff, transparent);
+    animation: 1s loadingAnim  infinite linear;
+  }
 
   .infoSpace{
     background-color: #00000075;
