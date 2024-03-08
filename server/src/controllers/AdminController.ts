@@ -132,7 +132,7 @@ export async function del(req: Request, res: Response){
 
         if(!admin) return res.json({err: 'Amdin not found'});
 
-        if(bcrypt.compareSync(password, admin.password)) {err: 'Wrong password'};
+        if(!bcrypt.compareSync(password, admin.password)) return res.json({err: 'Wrong password'});
 
         await Admin.findOneAndDelete({_id: id});
         return res.json({success: 'Admin deleted'});
