@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { Container, Info, WarningMessage } from "../styled";
+import { Container, Info } from "../styled";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
 import ChangeEventInput from "../../../types/ChangeEventInput";
@@ -19,8 +19,6 @@ function User(){
   const { id } = useParams();
   const navigate = useNavigate();
   
-  const [showDelForm, setShowDelForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
   const [showCamIcon, setShowCamIcon] = useState(false);
   
   const accessTState = useAppSelector(state => state.accessToken);
