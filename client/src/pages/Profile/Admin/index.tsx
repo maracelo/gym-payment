@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Container, Info } from "../styled";
+import { Container, Info, WarningMessage } from "../styled";
 import { useNavigate, useParams } from "react-router-dom";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
@@ -14,6 +14,7 @@ type Admin = {
 
 function Admin(){
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [showDelForm, setShowDelForm] = useState(false);
   const [showEditForm, setShowEditForm] = useState(false);
@@ -28,9 +29,13 @@ function Admin(){
 
   const [adminDelPassword, setAdminDelPassword] = useState<string>('');
   const accessTState = useAppSelector(state => state.accessToken);
-  const navigate = useNavigate();
 
   const [loading, setLoading] = useState<boolean>(true);
+
+  type warningObj = {msg: string, type: 'err' | 'success'}
+
+  const [editWarningMessage, setEditWarningMessage] = useState<warningObj>({msg: '', type: 'err'});
+  const [delWarningMessage, setDelWarningMessage] = useState<warningObj>({msg: '', type: 'err'});
 
   useEffect(() =>{
     (async () =>{
@@ -46,7 +51,7 @@ function Admin(){
         const res = await req.json();
   
         if('email' !in res){
-          alert('Invalid Admin Id');
+          alert('Admin not found');
           navigate('/');
         }else{
           let { name, email, phone, profile_pic } = res.admin;
@@ -72,6 +77,8 @@ function Admin(){
   const handleInputCurrPasswordChange = (e: ChangeEventInput) => { setInputCurrPassword(e.target.value) };
 
   const handleEdit = async () =>{
+    setEditWarningMessage({msg: '', type: 'err'});
+
     let newData: any = {};
 
     if(inputName !== adminInfo.name) newData.name = inputName;
@@ -100,9 +107,10 @@ function Admin(){
   
         const res = await req.json();
   
-        if('err' in res) alert(res.err);
+        if('err' in res) setEditWarningMessage({msg: res.err, type: 'err'});
+
         else{
-          alert('Admin Updated.');
+          setEditWarningMessage({msg: 'Admin Updated', type: 'success'});
           
           const {name, email, phone, profile_pic} = res.admin;
 
@@ -113,10 +121,13 @@ function Admin(){
         }
       }catch(err){
         console.log('Error: ' + err);
-        alert('It happend an error while trying to update Admin.');
+        setEditWarningMessage({msg: 'It happend an error while trying to update Admin', type: 'err'});
       }
     }else{
-      alert('Admin not Updated! You need to change and fill one or more fields.');
+      setEditWarningMessage({
+        msg: 'Admin not Updated! You need to change and fill one or more fields', 
+        type: 'err'
+      });
     }
   };
 
@@ -124,6 +135,8 @@ function Admin(){
   
   const handleDel = async () =>{
     if(adminDelPassword){
+      setDelWarningMessage({msg: '', type: 'err'});
+
       let password = adminDelPassword;
       setAdminDelPassword('');
       
@@ -139,7 +152,7 @@ function Admin(){
   
         const res = await req.json();
 
-        if('err' in res) alert('Error: ' + res.err);
+        if('err' in res) setDelWarningMessage({msg: res.err, type: 'err'});
         
         else{
           alert('Admin Deleted');
@@ -147,8 +160,10 @@ function Admin(){
         }
       }catch(err){
         console.log('Error: ' + err);
-        alert('It happened an error while trying to delete Admin');
+        setDelWarningMessage({msg: 'It happened an error while trying to delete Admin', type: 'err'});
       }
+    }else{
+      setDelWarningMessage({msg: 'Password is empty', type: 'err'});
     }
   };
 
@@ -193,6 +208,8 @@ function Admin(){
 
             <h4>Change Admin's information below</h4>
 
+            {editWarningMessage.msg && <WarningMessage $warning={editWarningMessage.type}>{editWarningMessage.msg}</WarningMessage>}
+
             <input type="text" name="name" placeholder="Name" value={inputName} onChange={handleInputNameChange} />
             <input type="email" name="email" placeholder="Email" value={inputEmail} onChange={handleInputEmailChange} />
             <input type="text" name="phone" placeholder="Phone" value={inputPhone ?? undefined} onChange={handleInputPhoneChange} />
@@ -209,6 +226,8 @@ function Admin(){
             <p className="X"><span onClick={handleShowDelForm}>X</span></p>
 
             <h4>Do you really want to delete your Admin?</h4>
+
+            {delWarningMessage.msg && <WarningMessage $warning={delWarningMessage.type}>{delWarningMessage.msg}</WarningMessage>}
 
             <input type="password" name="password" placeholder="Password" value={adminDelPassword} onChange={handleAdminDelPasswordChange} />
 
