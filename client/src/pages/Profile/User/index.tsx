@@ -4,6 +4,8 @@ import { Container, Info, WarningMessage } from "../styled";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
 import ChangeEventInput from "../../../types/ChangeEventInput";
+import EditForm from "../../../components/ProfileForms/EditForm";
+import DelForm from "../../../components/ProfileForms/DelForm";
 
 type User = {
   name: string,
@@ -70,8 +72,18 @@ function User(){
   const handlePhoneChange = (e: ChangeEventInput) =>{ setInputPhone(e.target.value) };
   const handlePlanChange = () =>{ setInputPlan(!inputPlan) };
 
-  const handleShowDelForm = () =>{ setShowDelForm(!showDelForm) };
-  const handleShowEditForm = () =>{ setShowEditForm(!showEditForm) };
+  const handleShowEditForm = () =>{
+    const editFormElement = document.querySelector('#editForm') as HTMLElement;
+    editFormElement.classList.contains('showForm') ?
+      editFormElement.classList.remove('showForm') :
+      editFormElement.classList.add('showForm');
+  };
+  const handleShowDelForm = () =>{
+    const editFormElement = document.querySelector('#delForm') as HTMLElement;
+    editFormElement.classList.contains('showForm') ?
+      editFormElement.classList.remove('showForm') :
+      editFormElement.classList.add('showForm');
+  };
   const handleCam = () =>{ setShowCamIcon(!showCamIcon) };
 
   const handleEdit = async () =>{
@@ -189,14 +201,8 @@ function User(){
           </Info>
         }
 
-        <div id="editForm" className="formContainer" style={{display: showEditForm ? 'flex' : 'none'}}>
-          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
-            <p className="X"><span onClick={handleShowEditForm}>X</span></p>
-
-            <h4>Change User's information below</h4>
-
-            {editWarningMessage.msg && <WarningMessage $warning={editWarningMessage.type}>{editWarningMessage.msg}</WarningMessage>}
-
+        <EditForm handleShowForm={handleShowEditForm} warningMessage={editWarningMessage}>
+          <>
             <input type="text" name="name" placeholder="Name" value={inputName} onChange={handleNameChange} />
             <input type="email" name="email" placeholder="Email" value={inputEmail} onChange={handleEmailChange} />
             <input type="text" name="phone" placeholder="Phone" value={inputPhone} onChange={handlePhoneChange} />
@@ -206,22 +212,16 @@ function User(){
             </label>
 
             <button onClick={handleEdit}>Edit</button>
-          </form>
-        </div>
+          </>
+        </EditForm>
 
-        <div id="delForm" className="formContainer" style={{display: showDelForm ? 'flex' : 'none'}}>
-          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
-            <p className="X"><span onClick={handleShowDelForm}>X</span></p>
-
-            <h4>Do you really want to delete this User?</h4>
-
-            {delWarningMessage.msg && <WarningMessage $warning={delWarningMessage.type}>{delWarningMessage.msg}</WarningMessage>}
-            
+        <DelForm handleShowForm={handleShowDelForm} warningMessage={delWarningMessage}>
+          <>
             <input type="password" name="password" placeholder="Admin's Password" value={userDelPassword} onChange={handleChangeUserDelPassword} />
 
             <button onClick={handleDel}>Delete</button>
-          </form>
-        </div>
+          </>
+        </DelForm>
       </div>
     </Container>
   );

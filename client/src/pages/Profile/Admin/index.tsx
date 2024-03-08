@@ -1,9 +1,11 @@
 import { useState, useEffect } from "react";
-import { Container, Info, WarningMessage } from "../styled";
+import { Container, Info } from "../styled";
 import { useNavigate, useParams } from "react-router-dom";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
 import ChangeEventInput from "../../../types/ChangeEventInput";
+import EditForm from "../../../components/ProfileForms/EditForm";
+import DelForm from "../../../components/ProfileForms/DelForm";
 
 type Admin = {
   name: string,
@@ -16,8 +18,6 @@ function Admin(){
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [showDelForm, setShowDelForm] = useState(false);
-  const [showEditForm, setShowEditForm] = useState(false);
   const [showCamIcon, setShowCamIcon] = useState(false);
   
   const [inputName, setInputName] = useState<string>('');
@@ -66,9 +66,19 @@ function Admin(){
     })()
   }, [accessTState]);
 
-  const handleShowDelForm = () =>{ setShowDelForm(!showDelForm) }
-  const handleShowEditForm = () =>{ setShowEditForm(!showEditForm) }
-  const handleCam = () =>{ setShowCamIcon(!showCamIcon) }
+  const handleShowEditForm = () =>{
+    const editFormElement = document.querySelector('#editForm') as HTMLElement;
+    editFormElement.classList.contains('showForm') ?
+      editFormElement.classList.remove('showForm') :
+      editFormElement.classList.add('showForm');
+  };
+  const handleShowDelForm = () =>{
+    const editFormElement = document.querySelector('#delForm') as HTMLElement;
+    editFormElement.classList.contains('showForm') ?
+      editFormElement.classList.remove('showForm') :
+      editFormElement.classList.add('showForm');
+  };
+  const handleCam = () =>{ setShowCamIcon(!showCamIcon) };
 
   const handleInputNameChange = (e: ChangeEventInput) => { setInputName(e.target.value) };
   const handleInputEmailChange = (e: ChangeEventInput) => { setInputEmail(e.target.value) };
@@ -202,14 +212,8 @@ function Admin(){
           </Info>
         }
 
-        <div id="editForm" className="formContainer" style={{display: showEditForm ? 'flex' : 'none'}}>
-          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
-            <p className="X"><span onClick={handleShowEditForm}>X</span></p>
-
-            <h4>Change Admin's information below</h4>
-
-            {editWarningMessage.msg && <WarningMessage $warning={editWarningMessage.type}>{editWarningMessage.msg}</WarningMessage>}
-
+        <EditForm handleShowForm={handleShowEditForm} warningMessage={editWarningMessage}>
+          <>
             <input type="text" name="name" placeholder="Name" value={inputName} onChange={handleInputNameChange} />
             <input type="email" name="email" placeholder="Email" value={inputEmail} onChange={handleInputEmailChange} />
             <input type="text" name="phone" placeholder="Phone" value={inputPhone ?? undefined} onChange={handleInputPhoneChange} />
@@ -218,22 +222,16 @@ function Admin(){
             <input type="password" name="password" placeholder="Current Password" value={inputCurrPassword} onChange={handleInputCurrPasswordChange} />
 
             <button onClick={handleEdit}>Edit</button>
-          </form>
-        </div>
+          </>
+        </EditForm>
 
-        <div id="delForm" className="formContainer" style={{display: showDelForm ? 'flex' : 'none'}}>
-          <form className="form" onSubmit={(e: any) =>{e.preventDefault()}}>
-            <p className="X"><span onClick={handleShowDelForm}>X</span></p>
-
-            <h4>Do you really want to delete your Admin?</h4>
-
-            {delWarningMessage.msg && <WarningMessage $warning={delWarningMessage.type}>{delWarningMessage.msg}</WarningMessage>}
-
+        <DelForm handleShowForm={handleShowDelForm} warningMessage={delWarningMessage}>
+          <>
             <input type="password" name="password" placeholder="Password" value={adminDelPassword} onChange={handleAdminDelPasswordChange} />
 
             <button onClick={handleDel}>Delete</button>
-          </form>
-        </div>
+          </>
+        </DelForm>
       </div>
     </Container>
   );
