@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
+import sharp from "sharp";
+import fs from "fs";
 
 import User from "../models/User";
 
@@ -88,6 +90,39 @@ export async function update(req: Request, res: Response){
     }
 
     return res.json({err: 'User not updated'});
+}
+
+export async function newProfilePic(req: Request, res: Response){
+    const id = req.params.id;
+    const newPic = req.file;
+
+    if(!id) return res.status(400).json({err: 'Id not sent'});
+
+    const user = await User.findOne({_id: id});
+
+    if(!user) return res.status(404).json({err: 'User not found'});
+
+    if(!newPic) return res.status(400).json({err: 'Profile pic wasn\'t sent'});
+
+    try{
+        await sharp('public/media/images/temp/' + newPic.filename)
+            .resize(100, 100)
+            .toFile('public/media/images/' + newPic.filename);
+    
+        sharp.cache(false);
+
+        fs.unlinkSync('public/media/images/temp/' + newPic.filename);
+
+        if(user.profile_pic != 'default_profile_pic.jpg') fs.unlinkSync('public/media/images/' + user.profile_pic);
+
+        const newUser = await User.findOneAndUpdate({_id: id}, {profile_pic: newPic.filename}, {new: true});
+    
+        res.json({user: newUser});
+        
+    }catch(err){
+        console.log(err);
+        return res.status(500).json({err: 'Profile pic not updated'});
+    }
 }
 
 export async function del(req: Request, res: Response){

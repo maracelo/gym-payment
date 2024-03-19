@@ -52,8 +52,6 @@ async function filterAdminDataUpdate(data: any, admin: AdminType): filterReturn{
         updateFields.phone = filteredPhone;
     }
 
-    // TODO make a filter to profile_pic
-
     return updateFields;
 }
 
