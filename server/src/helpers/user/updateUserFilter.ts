@@ -16,7 +16,7 @@ type updateFields = {
 type filterReturn = Promise<updateFields | {err: string}>;
 
 async function updateUserFilter(data: any, user: UserType): filterReturn{
-    const { name, email, plan, phone } = data;
+    const { name, email, plan, phone, profile_pic } = data;
     let updateFields: updateFields = {};
 
     if(name){
@@ -43,8 +43,6 @@ async function updateUserFilter(data: any, user: UserType): filterReturn{
         if(!filteredPhone || filteredPhone == user.phone) return {err: 'Invalid phone number'};
         updateFields.phone = filteredPhone;
     }
-
-    // TODO make a filter to profile_pic
 
     return updateFields;
 }
