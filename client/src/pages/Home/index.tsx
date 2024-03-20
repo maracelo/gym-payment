@@ -118,7 +118,7 @@ function Home(){
                 <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                   <div >
                     <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
-                        <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                        <img src={`${import.meta.env.VITE_PROFILE_PICS_URL}${el.profile_pic}`} alt="" />
                     </Link>
                     <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
                     <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
@@ -152,7 +152,7 @@ function Home(){
                     <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                       <div>
                         <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
-                          <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                          <img src={`${import.meta.env.VITE_PROFILE_PICS_URL}${el.profile_pic}`} alt="" />
                         </Link>
                         <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
                         <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>
@@ -182,7 +182,7 @@ function Home(){
                     <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                       <div >
                         <Link to={`${import.meta.env.VITE_BASE_URL}user/${el._id}`}>
-                            <img src={`${import.meta.env.VITE_BASE_URL}public/assets/images/${el.profile_pic}`} alt="" />
+                            <img src={`${import.meta.env.VITE_PROFILE_PICS_URL}${el.profile_pic}`} alt="" />
                         </Link>
                         <h4><p className={el.plan === 'vip' ? 'gold' : ''}>{el.name}</p></h4>
                         <p className='status'><span>{el['payment_status'] === 'payed' ? 'Payed' : 'Late'}</span>&nbsp;<strong className='triangle'>&#x25BC;</strong></p>

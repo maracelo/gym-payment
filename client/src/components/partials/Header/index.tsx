@@ -45,7 +45,7 @@ function Header(){
           setAdmin({
             adminId: decoded.adminId,
             name: decoded.name,
-            profile_pic: import.meta.env.VITE_BASE_URL + 'public/assets/images/' + decoded.profile_pic
+            profile_pic: import.meta.env.VITE_PROFILE_PICS_URL + decoded.profile_pic
           });
           setLoading(false);
         }

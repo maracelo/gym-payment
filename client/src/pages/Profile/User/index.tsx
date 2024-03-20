@@ -166,22 +166,47 @@ function User(){
     }
   }
 
-  const handleProfilePicChange = (e: any) =>{
-    const input: any = document.querySelector("#pic_file");
-    if(input) input.click();
+  const handleGetProfilePic = async () =>{
+    const input: HTMLInputElement | null = document.querySelector("#pic_file");
 
-    // send profile pic via axios
+    if(input) input.click();
+  }
+
+  const handleProfilePicChange = async (e: any) =>{
+    const pic = e.target.files[0];
+
+    if(pic){
+      const newPic = new FormData();
+      newPic.append('newPic', pic);
+  
+      const req = await fetch(`${import.meta.env.VITE_API_BASE_URL}user/${id}/newpic`, {
+        method: 'put',
+        headers: {
+          'Authorization': 'Bearer ' + accessTState.accessToken
+        },
+        body: newPic
+      });
+  
+      const res = await req.json();
+  
+      if('err' in res) alert(res.err);
+  
+      else{
+        setUserInfo({...userInfo, profile_pic: res.user.profile_pic});
+        location.reload();
+      }
+    }
   }
 
   return (
     <Container>
       <div className="infoSpace">
-        <div onMouseEnter={handleCam} onMouseLeave={handleCam} onClick={handleProfilePicChange} className="profile_pic">
-          <input id="pic_file" type="file" />
+        <div onMouseEnter={handleCam} onMouseLeave={handleCam} onClick={handleGetProfilePic} className="profile_pic">
+          <input id="pic_file" type="file" onChange={handleProfilePicChange} />
           {userInfo.profile_pic &&
             <img 
               id="profile_pic" 
-              src={import.meta.env.VITE_BASE_URL + 'public/assets/images/' + userInfo.profile_pic} 
+              src={import.meta.env.VITE_PROFILE_PICS_URL + userInfo.profile_pic} 
               alt="User's profile picture"
             />
           }
