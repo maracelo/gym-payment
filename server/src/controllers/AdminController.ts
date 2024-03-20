@@ -134,15 +134,20 @@ export async function newProfilePic(req: Request, res: Response){
     if(!newPic) return res.status(400).json({err: 'Profile pic wasn\'t sent'});
 
     try{
-        await sharp('public/media/images/temp/' + newPic.filename)
+        await sharp(__dirname + '/../../public/media/images/temp/' + newPic.filename)
             .resize(100, 100)
-            .toFile('public/media/images/' + newPic.filename);
+            .toFile(__dirname + '/../../public/media/images/' + newPic.filename);
     
         sharp.cache(false);
 
-        fs.unlinkSync('public/media/images/temp/' + newPic.filename);
+        fs.unlinkSync(__dirname + '/../../public/media/images/temp/' + newPic.filename);
 
-        if(admin.profile_pic != 'default_profile_pic.jpg') fs.unlinkSync('public/media/images/' + admin.profile_pic);
+        if(
+            admin.profile_pic != 'default_profile_pic.jpg' && 
+            fs.existsSync(__dirname + '/../../public/media/images/' + admin.profile_pic)
+        ){
+            fs.unlinkSync(__dirname + '/../../public/media/images/' + admin.profile_pic);
+        }
 
         const newAdmin = await Admin.findOneAndUpdate({_id: id}, {profile_pic: newPic.filename}, {new: true});
     
@@ -169,8 +174,8 @@ export async function del(req: Request, res: Response){
 
         if(!bcrypt.compareSync(password, admin.password)) return res.json({err: 'Wrong password'});
 
-        if(admin.profile_pic != 'default_profile_pic.jpg' && fs.existsSync(__dirname + '../../public/media/images/' + admin.profile_pic))
-            fs.unlinkSync(__dirname + '../../public/media/images/' + admin.profile_pic);
+        if(admin.profile_pic != 'default_profile_pic.jpg' && fs.existsSync(__dirname + '/../../public/media/images/' + admin.profile_pic))
+            fs.unlinkSync(__dirname + '/../../public/media/images/' + admin.profile_pic);
 
         await Admin.deleteOne({_id: id});
 
