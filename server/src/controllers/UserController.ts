@@ -136,11 +136,17 @@ export async function del(req: Request, res: Response){
         return res.status(400).json({err: 'Invalid password'});
 
     try{
-        const user = await User.findOneAndDelete({_id: id});
+        const user = await User.findOne({_id: id});
 
-        if(user) return res.json({success: 'User deleted'});
+        if(!user) return res.status(404).json({err: 'User not found'});
+
+        if(user.profile_pic != 'default_profile_pic.jpg' && fs.existsSync(__dirname + '../../public/media/images/' + user.profile_pic))
+            fs.unlinkSync(__dirname + '../../public/media/images/' + user.profile_pic);
         
-        return res.status(404).json({err: 'User not found'});
+        await User.deleteOne({_id: id});
+
+        return res.json({success: 'User deleted'});
+        
     }catch(err){
         console.log(err);
     }

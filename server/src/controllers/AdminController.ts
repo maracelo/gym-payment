@@ -169,7 +169,11 @@ export async function del(req: Request, res: Response){
 
         if(!bcrypt.compareSync(password, admin.password)) return res.json({err: 'Wrong password'});
 
-        await Admin.findOneAndDelete({_id: id});
+        if(admin.profile_pic != 'default_profile_pic.jpg' && fs.existsSync(__dirname + '../../public/media/images/' + admin.profile_pic))
+            fs.unlinkSync(__dirname + '../../public/media/images/' + admin.profile_pic);
+
+        await Admin.deleteOne({_id: id});
+
         return res.json({success: 'Admin deleted'});
 
     }catch(err){
