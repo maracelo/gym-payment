@@ -37,6 +37,7 @@ router.post('/admin/register', AdminController.create);
 router.get('/admin/:id', passport.authenticate('jwt', {session: false}), AdminController.get);
 router.put('/admin/:id', passport.authenticate('jwt', {session: false}), AdminController.update);
 router.put('/admin/:id/newpic', passport.authenticate('jwt', {session: false}), upload.single('newPic'), AdminController.newProfilePic);
+router.put('/admin/:id/removepic', passport.authenticate('jwt', {session: false}), AdminController.removeProfilePic);
 router.delete('/admin/:id', passport.authenticate('jwt', {session: false}), AdminController.del);
 
 router.get('/usertoday', passport.authenticate('jwt', {session: false}), UserController.getTodayList);
@@ -45,6 +46,7 @@ router.get('/user/:id', passport.authenticate('jwt', {session: false}), UserCont
 router.post('/user', passport.authenticate('jwt', {session: false}), UserController.create);
 router.put('/user/:id', passport.authenticate('jwt', {session: false}), UserController.update);
 router.put('/user/:id/newpic', passport.authenticate('jwt', {session: false}), upload.single('newPic'), UserController.newProfilePic);
+router.put('/user/:id/removepic', passport.authenticate('jwt', {session: false}), UserController.removeProfilePic);
 router.delete('/user/:id', passport.authenticate('jwt', {session: false}), UserController.del);
 
 router.put('/payment/:id', passport.authenticate('jwt', {session: false}), PaymentController.updatePaymentStatus);
