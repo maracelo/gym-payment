@@ -166,7 +166,7 @@ function Admin(){
         
         else{
           alert('Admin Deleted');
-          navigate('/');
+          location.reload();
         }
       }catch(err){
         console.log('Error: ' + err);
