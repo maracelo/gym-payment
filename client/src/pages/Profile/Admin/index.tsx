@@ -209,6 +209,22 @@ function Admin(){
     }
   }
 
+  const handleRemovePic = async () =>{
+    const req = await fetch(`${import.meta.env.VITE_API_BASE_URL}admin/${id}/removepic`, {
+      method: 'put',
+      headers: {authorization: 'Bearer ' + accessTState.accessToken}
+    });
+
+    const res = await req.json();
+
+    if('err' in res) alert(res.err);
+
+    else{
+      setTimeout(() =>{ setAdminInfo({...adminInfo, profile_pic: res.admin.profile_pic}) }, 1000);
+      location.reload();
+    }
+  }
+
   return (
     <Container>
 
@@ -232,6 +248,7 @@ function Admin(){
             <li>Name: {adminInfo.name}</li>
             <li>Email: {adminInfo.email}</li>
             <li>Phone: {adminInfo.phone ?? '(None)'}</li>
+            <li><button id="removepic" onClick={handleRemovePic}>Remove Profile Picture</button></li>
             <li><button id="edit" onClick={handleShowEditForm}>Edit Information</button></li>
             <li><button id="del" onClick={handleShowDelForm}>Delete Admin</button></li>
           </Info>

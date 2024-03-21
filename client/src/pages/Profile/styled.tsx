@@ -81,6 +81,13 @@ export const Container = styled.div`
   }
 
   @media(max-width: 800px){
+    
+    flex-direction: column;
+    
+    .infoSpace{
+      flex-direction: column;
+    }
+
     .info{
       flex-direction: column;
     }
@@ -121,6 +128,10 @@ export const Info = styled.ul`
   
   #edit{
     background-color: #2c60a5;
+  }
+
+  #removepic{
+    background-color: #008000;
   }
 
   button{

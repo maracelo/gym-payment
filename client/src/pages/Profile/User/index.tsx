@@ -198,6 +198,24 @@ function User(){
     }
   }
 
+  const handleRemovePic = async () =>{
+    const req = await fetch(`${import.meta.env.VITE_API_BASE_URL}user/${id}/removepic`, {
+      method: 'put',
+      headers: {
+        authorization: 'Bearer ' + accessTState.accessToken
+      }
+    });
+
+    const res = await req.json();
+
+    if('err' in res) alert(res.err);
+
+    else{
+      setTimeout(() =>{ setUserInfo({...userInfo, profile_pic: res.user.profile_pic}) }, 1000);
+      location.reload();
+    }
+  }
+
   return (
     <Container>
       <div className="infoSpace">
@@ -219,6 +237,7 @@ function User(){
             <li>Email: {userInfo.email}</li>
             <li>Phone: {userInfo.phone ?? '(None)'}</li>
             <li>Plan: {userInfo.plan}</li>
+            <li><button id="removepic" onClick={handleRemovePic}>Remove Profile Picture</button></li>
             <li><button id="edit" onClick={handleShowEditForm}>Edit Information</button></li>
             <li><button id="del" onClick={handleShowDelForm}>Delete User</button></li>
           </Info>

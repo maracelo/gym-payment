@@ -159,6 +159,25 @@ export async function newProfilePic(req: Request, res: Response){
     }
 }
 
+export async function removeProfilePic(req: Request, res: Response){
+    const id = req.params.id;
+
+    if(!id) res.status(400).json({err: 'Id not sent'});
+
+    const admin = await Admin.findOne({_id: id});
+    
+    if(!admin) res.status(404).json({err: 'Admin not found'});
+
+    try{
+        const admin = await Admin.updateOne({_id: id}, {profile_pic: 'default_profile_pic.jpg'}, {new: true});
+        return res.json({admin});
+    }catch(err){
+        console.log(err);
+    }
+    
+    res.status(500).json({err: 'System error'});
+}
+
 export async function del(req: Request, res: Response){
     const id = req.params.id;
     const password = req.body.password;
