@@ -80,7 +80,7 @@ export async function update(req: Request, res: Response){
     
     if(Object.keys(updateFields).length > 0){
         try{
-            const updatedUser = await User.findOneAndUpdate({_id: id}, updateFields, {new: true});
+            const updatedUser = await User.updateOne({_id: id}, updateFields, {new: true});
 
             if(updatedUser) return res.json({user: updatedUser});
         }catch(err){
@@ -120,7 +120,7 @@ export async function newProfilePic(req: Request, res: Response){
             fs.unlinkSync(__dirname + '/../../public/media/images/' + user.profile_pic);
         }
 
-        const newUser = await User.findOneAndUpdate({_id: id}, {profile_pic: newPic.filename}, {new: true});
+        const newUser = await User.updateOne({_id: id}, {profile_pic: newPic.filename}, {new: true});
     
         res.json({user: newUser});
         
