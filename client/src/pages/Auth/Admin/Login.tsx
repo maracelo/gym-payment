@@ -66,7 +66,7 @@ function AdminLogin(){
       
       else{
         cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
-        navigate('/');
+        location.href = '/';
       }
     }else{
       setError('Fill all fields!');
