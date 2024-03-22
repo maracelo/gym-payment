@@ -19,7 +19,7 @@ export async function updatePaymentStatus(req: Request, res: Response){
                 payment_late_date = new Date();
             }
 
-            const update = await User.findOneAndUpdate( {_id: id}, {
+            const update = await User.updateOne( {_id: id}, {
                 payment_status: payment_status,
                 payment_late_date: payment_late_date
             });

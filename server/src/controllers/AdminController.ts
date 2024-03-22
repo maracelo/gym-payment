@@ -110,7 +110,7 @@ export async function update(req: Request, res: Response){
     if(Object.keys(updateFields).length > 0){
 
         try{
-            const updatedAdmin = await Admin.findOneAndUpdate({_id: id}, updateFields, {new: true});
+            const updatedAdmin = await Admin.updateOne({_id: id}, updateFields, {new: true});
             if(updatedAdmin) return res.json({admin: updatedAdmin});
         }catch(err){
             console.log(err);
@@ -149,7 +149,7 @@ export async function newProfilePic(req: Request, res: Response){
             fs.unlinkSync(__dirname + '/../../public/media/images/' + admin.profile_pic);
         }
 
-        const newAdmin = await Admin.findOneAndUpdate({_id: id}, {profile_pic: newPic.filename}, {new: true});
+        const newAdmin = await Admin.updateOne({_id: id}, {profile_pic: newPic.filename}, {new: true});
     
         res.json({admin: newAdmin});
         
