@@ -127,7 +127,7 @@ export async function newProfilePic(req: Request, res: Response){
 
         const newUser = await User.findOneAndUpdate({_id: id}, {profile_pic: newPic.filename}, {new: true});
     
-        res.json({user: newUser});
+        return res.json({user: newUser});
         
     }catch(err){
         console.log(err);
