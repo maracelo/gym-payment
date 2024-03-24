@@ -64,13 +64,14 @@ function Header(){
   };
 
   const logedPage = () =>{
-    const arr = document.location.href.split('/');
+    const arr = location.href.split('/');
+    const route = arr[arr.length - 1];
 
-    return arr[arr.length - 1] === 'login' || arr[arr.length - 1] === 'register' ? false : true;
+    return route === 'login' || route === 'register' || route === 'serverout' ? false : true;
   };
 
   const handleLogout = () =>{
-    cookies.remove('RefreshToken');
+    cookies.remove('RefreshToken', {path: '/'});
     dispatch( setAccessToken('') );
     navigate('admin/login');
   };

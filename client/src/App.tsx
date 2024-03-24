@@ -26,29 +26,41 @@ function App() {
 
   useEffect(() =>{
     (async () =>{
-      let token: string = accessTState.accessToken;
+      const url = location.href.split('/');
 
-      if(!checkAccessToken(token)) token = '';
-
-      const refreshToken = cookies.get('RefreshToken');
-
-      if(!token && refreshToken){
-        token = await getAccessToken(refreshToken);
-
-        if(token === null) navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
-
-        dispatch(setAccessToken(token));
-      } 
-
-      if(token){
-        setValidToken(true);
-        setTimeout(() =>{ 
-          setValidToken(false);
-          dispatch(setAccessToken(''));
-        }, 3600000);
-      } 
-      
-      else navigate('/admin/login');
+      if(url[url.length - 1] !== 'serverout'){
+        let token: string = accessTState.accessToken;
+  
+        if(!checkAccessToken(token)) token = '';
+  
+        const refreshToken = cookies.get('RefreshToken');
+  
+        if(!token && refreshToken){
+          const getTokenRes = await getAccessToken(refreshToken);
+  
+          if('err' in getTokenRes){
+            if(getTokenRes.err === 'server out') navigate('/serverout');
+  
+            else{
+              navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
+            }
+            return;
+          }
+          
+          token = getTokenRes.accessToken
+          dispatch(setAccessToken(getTokenRes.accessToken));
+        } 
+  
+        if(token){
+          setValidToken(true);
+          setTimeout(() =>{ 
+            setValidToken(false);
+            dispatch(setAccessToken(''));
+          }, 3600000);
+        } 
+        
+        else navigate('/admin/login');
+      }
     })();
   }, [validToken]);
 

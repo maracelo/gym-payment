@@ -11,11 +11,13 @@ import AdminLogin from './pages/Auth/Admin/Login';
 import AdminRegister from './pages/Auth/Admin/Register';
 
 import E404 from './pages/E404';
+import ServerOut from './pages/ServerOut';
 
 function MainRoutes(){
   return(
     useRoutes([
       {path: '*', element: <E404 />},
+      {path: '/serverout', element: <ServerOut />},
 
       {path: '/', element: <Home />},
 

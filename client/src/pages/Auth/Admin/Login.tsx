@@ -12,6 +12,7 @@ import useAppSelector from '../../../redux/typedUseSelectorHook';
 import getAccessToken from '../../../helpers/getAccessToken';
 import checkAccessToken from '../../../helpers/checkAccessToken';
 import ChangeEventInput from "../../../types/ChangeEventInput";
+import loginAdmin from '../../../helpers/loginAdmin';
 
 function AdminLogin(){
   const navigate = useNavigate();
@@ -31,7 +32,21 @@ function AdminLogin(){
 
       const refreshToken = cookies.get('RefreshToken');
 
-      if(!accessToken && refreshToken) accessToken = await getAccessToken(refreshToken);
+      if(!accessToken && refreshToken){
+        const getTokenRes = await getAccessToken(refreshToken);
+
+        if('err' in getTokenRes){
+          if(getTokenRes.err === 'server out') navigate('/serverout');
+
+          else{
+            setError(getTokenRes.err);
+            setTimeout(() =>{ setError('') }, 3000);
+          }
+          return;
+        }
+        
+        accessToken = getTokenRes.accessToken;
+      }
 
       if(accessToken){
         dispatch(setAccessToken(accessToken));
@@ -48,23 +63,15 @@ function AdminLogin(){
       
       const data = { email, password };
 
-      const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/login', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-  
-      const res = await req.json();
+      const res = await loginAdmin(data);
   
       if('err' in res){
+        if(res.err === 'server out') navigate('/serverout');
+
         setError(res.err);
         setTimeout(() =>{ setError('') }, 2000);
-      }
-      
-      else{
+
+      }else{
         cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
         location.href = '/';
       }
