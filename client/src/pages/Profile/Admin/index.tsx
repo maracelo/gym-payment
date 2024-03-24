@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Container, Info } from "../styled";
 import { useNavigate, useParams } from "react-router-dom";
+import Cookies from "universal-cookie";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
 import ChangeEventInput from "../../../types/ChangeEventInput";
@@ -17,6 +18,7 @@ type Admin = {
 function Admin(){
   const { id } = useParams();
   const navigate = useNavigate();
+  const cookies = new Cookies();
 
   const [showCamIcon, setShowCamIcon] = useState(false);
   
@@ -166,7 +168,8 @@ function Admin(){
         
         else{
           alert('Admin Deleted');
-          location.reload();
+          cookies.remove('RefreshToken', {path: '/'});
+          location.href = '/';
         }
       }catch(err){
         console.log('Error: ' + err);
