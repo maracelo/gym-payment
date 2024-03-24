@@ -17,8 +17,9 @@ export async function getTodayList(req: Request, res: Response){
         return res.json({todayUsers});
     }catch(err){
         console.log(err);
-        res.status(500).json({err: {err: 'System error'}});
     }
+
+    res.status(500).json({err: {err: 'System error'}});
 }
 
 export async function getLateList(req: Request, res: Response){
@@ -27,8 +28,9 @@ export async function getLateList(req: Request, res: Response){
         return res.json({lateUsers});
     }catch(err){
         console.log(err);
-        res.status(500).json({err: 'System error'})
     }
+
+    res.status(500).json({err: 'System error'})
 }
 
 export async function get(req: Request, res: Response){
@@ -43,9 +45,11 @@ export async function get(req: Request, res: Response){
             return res.status(404).json({err: 'User not found'});
         }catch(err){
             console.log(err);
-            res.status(500).json({err: 'System error'})
+            return res.status(500).json({err: 'System error'})
         }
     }
+
+    res.status(400).json({err: 'Id not sent'});
 }
 
 export async function create(req: Request, res: Response){
@@ -61,8 +65,9 @@ export async function create(req: Request, res: Response){
         return res.status(500).json({err: 'User not created'});
     }catch(err){
         console.log(err);
-        res.status(500).json({err: 'System error'});
     }
+
+    res.status(500).json({err: 'System error'});
 }
 
 export async function update(req: Request, res: Response){
@@ -89,7 +94,7 @@ export async function update(req: Request, res: Response){
         }
     }
 
-    return res.json({err: 'User not updated'});
+    res.json({err: 'User not updated'});
 }
 
 export async function newProfilePic(req: Request, res: Response){
@@ -126,8 +131,9 @@ export async function newProfilePic(req: Request, res: Response){
         
     }catch(err){
         console.log(err);
-        return res.status(500).json({err: 'Profile pic not updated'});
     }
+
+    res.status(500).json({err: 'System error'});
 }
 
 export async function removeProfilePic(req: Request, res: Response){

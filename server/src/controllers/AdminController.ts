@@ -34,12 +34,14 @@ export async function login(req: Request, res: Response){
         
         if(!hasRToken)
             await RefreshToken.create({admin_id: admin.id, expiresin: sevenDaysDate, refresh_token: refreshToken});
+        
+        return res.json({refreshToken});
+
     }catch(err){
         console.log(err);
-        return res.status(500).json({error: 'System error'});
     }
-
-    res.json({refreshToken});
+    
+    return res.status(500).json({error: 'System error'});
 }
 
 export async function get(req: Request, res: Response){
@@ -57,6 +59,8 @@ export async function get(req: Request, res: Response){
             return res.status(500).json({err: 'System error'});
         }
     }
+
+    res.status(400).json({err: 'Id not sent'});
 }
 
 export async function create(req: Request, res: Response){
@@ -67,31 +71,26 @@ export async function create(req: Request, res: Response){
     try{
         const admin = await Admin.create(newAdminFields);
 
-        if(admin){
-            const refreshToken = jwt.sign({adminId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
+        if(!admin) throw Error('Admin not created. Err: ' + admin);
 
-            const sevenDaysDate = new Date(Date.now() + 604800000);
+        const refreshToken = jwt.sign({adminId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
 
-            try{
-                const hasRToken = await RefreshToken.findOneAndUpdate(
-                    {admin_id: admin.id}, {expiresin: sevenDaysDate, refresh_token: refreshToken}
-                );
-                
-                if(!hasRToken)
-                    await RefreshToken.create({admin_id: admin.id, expiresin: sevenDaysDate, refresh_token: refreshToken});
-            }catch(err){
-                console.log(err);
-                return res.status(500).json({error: 'System error'});
-            }
+        const sevenDaysDate = new Date(Date.now() + 604800000);
 
-            return res.status(201).json({refreshToken});
-        }
+        const hasRToken = await RefreshToken.findOneAndUpdate(
+            {admin_id: admin.id}, {expiresin: sevenDaysDate, refresh_token: refreshToken}
+        );
+            
+        if(!hasRToken)
+            await RefreshToken.create({admin_id: admin.id, expiresin: sevenDaysDate, refresh_token: refreshToken});
+
+        return res.status(201).json({refreshToken});
+
     }catch(err){
         console.log(err);
-        return res.status(500).json({err: 'System error'});
     }
-
-    res.json({err: 'Admin not created'});
+    
+    res.status(500).json({err: 'System error'});
 }
 
 export async function update(req: Request, res: Response){
@@ -116,7 +115,7 @@ export async function update(req: Request, res: Response){
             
         }catch(err){
             console.log(err);
-            res.status(500).json({err: 'System error'});
+            return res.status(500).json({err: 'System error'});
         }
     }
 
@@ -157,8 +156,9 @@ export async function newProfilePic(req: Request, res: Response){
         
     }catch(err){
         console.log(err);
-        return res.status(500).json({err: 'Profile pic not updated'});
     }
+
+    return res.status(500).json({err: 'System error'});
 }
 
 export async function removeProfilePic(req: Request, res: Response){
@@ -208,5 +208,5 @@ export async function del(req: Request, res: Response){
         console.log(err);
     }
     
-    return res.status(500).json({err: 'System error'})
+    res.status(500).json({err: 'System error'})
 }
