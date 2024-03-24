@@ -152,13 +152,13 @@ export async function newProfilePic(req: Request, res: Response){
 
         const newAdmin = await Admin.findOneAndUpdate({_id: id}, {profile_pic: newPic.filename}, {new: true});
     
-        res.json({admin: newAdmin});
+        return res.json({admin: newAdmin});
         
     }catch(err){
         console.log(err);
     }
 
-    return res.status(500).json({err: 'System error'});
+    res.status(500).json({err: 'System error'});
 }
 
 export async function removeProfilePic(req: Request, res: Response){
