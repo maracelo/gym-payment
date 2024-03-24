@@ -1,13 +1,21 @@
+import { useDispatch } from 'react-redux';
 import { Title, Container, Form, PassOption } from '../styled';
-import PasswordInput from '../../../components/PasswordInput';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Cookies from 'universal-cookie';
+
+import { setAccessToken } from '../../../redux/reducers/accessTokenReducer';
+
 import ChangeEventInput from '../../../types/ChangeEventInput';
+
+import PasswordInput from '../../../components/PasswordInput';
+
 import registerAdmin from '../../../helpers/registerAdmin';
+import getAccessToken from '../../../helpers/getAccessToken';
 
 function AdminRegister(){
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -31,7 +39,20 @@ function AdminRegister(){
 
       }else{
         cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
-        location.href = '/';
+
+        const getTokenRes = await getAccessToken(res.refreshToken);
+  
+        if('err' in getTokenRes){
+          if(getTokenRes.err === 'server out') navigate('/serverout');
+
+          else{
+            navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
+          }
+          return;
+        }
+        
+        dispatch(setAccessToken(getTokenRes.accessToken));
+        navigate('/');
       }
       
     }else{
