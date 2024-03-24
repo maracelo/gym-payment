@@ -110,8 +110,10 @@ export async function update(req: Request, res: Response){
     if(Object.keys(updateFields).length > 0){
 
         try{
-            const updatedAdmin = await Admin.updateOne({_id: id}, updateFields, {new: true});
-            if(updatedAdmin) return res.json({admin: updatedAdmin});
+            const updatedAdmin = await Admin.findOneAndUpdate({_id: id}, updateFields, {new: true});
+            
+            return res.json({admin: updatedAdmin});
+            
         }catch(err){
             console.log(err);
             res.status(500).json({err: 'System error'});
@@ -149,7 +151,7 @@ export async function newProfilePic(req: Request, res: Response){
             fs.unlinkSync(__dirname + '/../../public/media/images/' + admin.profile_pic);
         }
 
-        const newAdmin = await Admin.updateOne({_id: id}, {profile_pic: newPic.filename}, {new: true});
+        const newAdmin = await Admin.findOneAndUpdate({_id: id}, {profile_pic: newPic.filename}, {new: true});
     
         res.json({admin: newAdmin});
         
@@ -169,8 +171,10 @@ export async function removeProfilePic(req: Request, res: Response){
     if(!admin) res.status(404).json({err: 'Admin not found'});
 
     try{
-        const admin = await Admin.updateOne({_id: id}, {profile_pic: 'default_profile_pic.jpg'}, {new: true});
+        const admin = await Admin.findOneAndUpdate({_id: id}, {profile_pic: 'default_profile_pic.jpg'}, {new: true});
+
         return res.json({admin});
+        
     }catch(err){
         console.log(err);
     }
