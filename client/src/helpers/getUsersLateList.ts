@@ -1,16 +1,21 @@
 async function getUsersLateList(accessToken: string){
-  const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'userlate', {
-    method: 'get',
-    headers: {
-      'Authorization': 'Bearer ' + accessToken,
-      'Accept': 'application/json',
-      'withCrendentials': 'include'
-    }
-  });
+  try{
+    const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'userlate', {
+      method: 'get',
+      headers: {
+        'Authorization': 'Bearer ' + accessToken,
+        'Accept': 'application/json',
+        'withCrendentials': 'include'
+      }
+    });
+  
+    const res = await req.json();
+  
+    if(res.lateUsers) return res.lateUsers;
 
-  const res = await req.json();
+  }catch(err){ console.log(err) }
 
-  if(res.lateUsers) return res.lateUsers;
+  return {err: 'server out'};
 }
 
 export default getUsersLateList;

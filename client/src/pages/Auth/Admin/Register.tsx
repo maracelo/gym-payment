@@ -1,13 +1,13 @@
 import { Title, Container, Form, PassOption } from '../styled';
 import PasswordInput from '../../../components/PasswordInput';
 import { Link, useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import Cookies from 'universal-cookie';
 import ChangeEventInput from '../../../types/ChangeEventInput';
+import registerAdmin from '../../../helpers/registerAdmin';
 
 function AdminRegister(){
   const navigate = useNavigate();
-
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -21,26 +21,19 @@ function AdminRegister(){
       
       const data = { name, email, password, password_confirmation }
 
-      const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/register', {
-        method: 'post',
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        body: JSON.stringify(data)
-      });
-  
-      const res = await req.json();
+      const res = await registerAdmin(data);
   
       if('err' in res){
+        if(res.err === 'server out') navigate('/serverout');
+
         setError(res.err);
         setTimeout(() =>{ setError('') }, 2000);
-      }
-      
-      else{
+
+      }else{
         cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
         location.href = '/';
       }
+      
     }else{
       setError('Fill all fields!');
       setTimeout(() =>{ setError('') }, 2000);

@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 
@@ -14,6 +14,7 @@ import getSearchList from '../../helpers/getSearchList';
 import { setSearchList } from '../../redux/reducers/searchListReducer';
 
 function Home(){
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const accessTState = useAppSelector(state => state.accessToken);
   const searchState = useAppSelector(state => state.search);
@@ -30,6 +31,9 @@ function Home(){
       if(accessTState.accessToken){
         if(todayList.length < 1){
           const todayListRes = await getUsersTodayList(accessTState.accessToken);
+          
+          if('err' in todayListRes) navigate('/serverout');
+
           if(todayListRes){
             setTodayList(todayListRes);
             setLoading(false);
@@ -37,11 +41,17 @@ function Home(){
         }
         if(lateList.length < 1){
           const lateListRes = await getUsersLateList(accessTState.accessToken);
+
+          if('err' in lateListRes) navigate('/serverout');
+
           if(lateListRes){
             setLateList(lateListRes);
             setLoading(false);
           }
         }
+      }else{
+        try{ await fetch(import.meta.env.VITE_API_BASE_URL + 'ping') }
+        catch(err){ navigate('/serverout') }
       }
     })();
   }, [accessTState]);
