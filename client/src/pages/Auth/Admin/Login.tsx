@@ -73,7 +73,20 @@ function AdminLogin(){
 
       }else{
         cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
-        location.href = '/';
+
+        const getTokenRes = await getAccessToken(res.refreshToken);
+  
+        if('err' in getTokenRes){
+          if(getTokenRes.err === 'server out') navigate('/serverout');
+
+          else{
+            navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
+          }
+          return;
+        }
+        
+        dispatch(setAccessToken(getTokenRes.accessToken));
+        navigate('/');
       }
     }else{
       setError('Fill all fields!');
