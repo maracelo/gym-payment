@@ -208,7 +208,7 @@ export const SearchResult = styled.div`
   width: 100%; 
   height: 500px;
   max-height: 500px;
-  grid-column: span 3;
+  grid-column: 2 / span 1;
 
   h1{
   font-size: 40px;
