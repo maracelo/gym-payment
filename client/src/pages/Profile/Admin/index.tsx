@@ -42,10 +42,13 @@ function Admin(){
   useEffect(() =>{
     (async () =>{
       if(accessTState.accessToken){
+        const refreshToken = cookies.get('RefreshToken');
+
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/' + id, {
           headers: {
             'method': 'get',
             'Accept': 'application/json',
+            'Refresh-Token': refreshToken,
             'Authorization': 'Bearer ' + accessTState.accessToken
           }
         });
@@ -108,9 +111,12 @@ function Admin(){
 
     if(newData){
       try{
+        const refreshToken = cookies.get('RefreshToken');
+
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/' + id, {
           method: 'put',
           headers: {
+            'Refresh-Token': refreshToken,
             'Authorization': 'Bearer ' + accessTState.accessToken,
             'Content-Type': 'application/json'
           },
@@ -153,9 +159,12 @@ function Admin(){
       setAdminDelPassword('');
       
       try{
+        const refreshToken = cookies.get('RefreshToken');
+
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'admin/' + id, {
           method: 'delete',
           headers: {
+            'Refresh-Token': refreshToken,
             'Authorization': 'Bearer ' + accessTState.accessToken,
             'Content-Type': 'application/json'
           },
@@ -192,10 +201,13 @@ function Admin(){
     if(pic){
       const newPic = new FormData();
       newPic.append('newPic', pic);
+
+      const refreshToken = cookies.get('RefreshToken');
   
       const req = await fetch(`${import.meta.env.VITE_API_BASE_URL}admin/${id}/newpic`, {
         method: 'put',
         headers: {
+          'Refresh-Token': refreshToken,
           'Authorization': 'Bearer ' + accessTState.accessToken
         },
         body: newPic
@@ -213,9 +225,14 @@ function Admin(){
   }
 
   const handleRemovePic = async () =>{
+    const refreshToken = cookies.get('RefreshToken');
+
     const req = await fetch(`${import.meta.env.VITE_API_BASE_URL}admin/${id}/removepic`, {
       method: 'put',
-      headers: {authorization: 'Bearer ' + accessTState.accessToken}
+      headers: {
+        'Refresh-Token': refreshToken,
+        'Authorization': 'Bearer ' + accessTState.accessToken
+      }
     });
 
     const res = await req.json();

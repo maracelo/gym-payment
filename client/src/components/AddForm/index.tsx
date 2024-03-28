@@ -1,4 +1,5 @@
 import React, { Dispatch, useState } from "react";
+import Cookies from "universal-cookie";
 
 import { Container, Warning } from './styled';
 import useAppSelector from "../../redux/typedUseSelectorHook";
@@ -10,6 +11,9 @@ type Props = {
 }
 
 function AddForm({ setTodayList }: Props){
+  const accessToken = useAppSelector((state) => state.accessToken.accessToken);
+  const cookies = new Cookies();
+
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -17,8 +21,6 @@ function AddForm({ setTodayList }: Props){
   
   const [warning, setWarning] = useState<string>('');
   const [errWarning, setErrWarning] = useState<string>('');
-
-  const accessToken = useAppSelector((state) => state.accessToken.accessToken);
 
   const handleSetWarning = (warning: string, type: 'warning' | 'err') =>{
     if(type === 'err'){
@@ -32,11 +34,14 @@ function AddForm({ setTodayList }: Props){
   }
 
   const handleCreateUser = async () =>{
+    const refreshToken = cookies.get('RefreshToken');
+
     const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'user', {
       method: 'post',
       headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
+        'Refresh-Token': refreshToken,
         'Authorization': 'Bearer ' + accessToken
       },
       body: JSON.stringify({name, email, phone, plan: vip})
@@ -50,7 +55,7 @@ function AddForm({ setTodayList }: Props){
     const res = await req.json();
 
     if('user' in res){
-      const todayListRes = await getUsersTodayList(accessToken);
+      const todayListRes = await getUsersTodayList(accessToken, refreshToken);
       if(todayListRes) setTodayList(todayListRes);
 
       handleSetWarning('User Created Successfully!', 'warning');

@@ -2,16 +2,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Cookies from "universal-cookie";
-
 import { Title, Container, Form, PassOption } from '../styled';
-import PasswordInput from '../../../components/PasswordInput';
 
 import { setAccessToken } from '../../../redux/reducers/accessTokenReducer';
 import useAppSelector from '../../../redux/typedUseSelectorHook';
 
-import getAccessToken from '../../../helpers/getAccessToken';
 import checkAccessToken from '../../../helpers/checkAccessToken';
+import getAccessToken from '../../../helpers/getAccessToken';
+
 import ChangeEventInput from "../../../types/ChangeEventInput";
+
+import PasswordInput from '../../../components/PasswordInput';
+
 import loginAdmin from '../../../helpers/loginAdmin';
 
 function AdminLogin(){
@@ -73,19 +75,7 @@ function AdminLogin(){
 
       }else{
         cookies.set('RefreshToken', res.refreshToken, {path: '/', expires: new Date(Date.now()+604800000)});
-
-        const getTokenRes = await getAccessToken(res.refreshToken);
-  
-        if('err' in getTokenRes){
-          if(getTokenRes.err === 'server out') navigate('/serverout');
-
-          else{
-            navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
-          }
-          return;
-        }
-        
-        dispatch(setAccessToken(getTokenRes.accessToken));
+        dispatch(setAccessToken(res.accessToken));
         navigate('/');
       }
     }else{
