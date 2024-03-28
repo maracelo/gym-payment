@@ -1,9 +1,10 @@
-async function getUsersTodayList(accessToken: string){
+async function getUsersTodayList(accessToken: string, refreshToken: string){
   try{
     const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'usertoday', {
       method: 'get',
       headers: {
         'Authorization': 'Bearer ' + accessToken,
+        'Refresh-Token': refreshToken,
         'Accept': 'application/json',
         'withCredentials': 'include'
       }

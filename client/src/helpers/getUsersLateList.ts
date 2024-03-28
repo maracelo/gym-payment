@@ -1,9 +1,10 @@
-async function getUsersLateList(accessToken: string){
+async function getUsersLateList(accessToken: string, refreshToken: string){
   try{
     const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'userlate', {
       method: 'get',
       headers: {
         'Authorization': 'Bearer ' + accessToken,
+        'Refresh-Token': refreshToken,
         'Accept': 'application/json',
         'withCrendentials': 'include'
       }

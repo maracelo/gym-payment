@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { SearchBarIcon, SearchBar as SearchBarS, NoResult } from "./styled";
 import { useDispatch } from "react-redux";
+import Cookies from "universal-cookie";
 
 import ChangeEventInput from "../../types/ChangeEventInput";
 import { setSearchList } from "../../redux/reducers/searchListReducer";
@@ -10,6 +11,7 @@ import { setSearch } from "../../redux/reducers/searchReducer";
 
 function SearchBar(){
   const dispatch = useDispatch();
+  const cookies = new Cookies();
   const accessTState = useAppSelector(state => state.accessToken);
 
   const [showSearchBar, setShowSearchBar] = useState<boolean>(false);
@@ -37,11 +39,13 @@ function SearchBar(){
 
     if(e.target.value !== ''){
       const timeout = setTimeout(async () =>{
-          const users = await getSearchList(e.target.value, accessTState.accessToken);
-          dispatch( setSearchList(users) );
-      
-          if(users.length > 0) setNoResult(false);
-          else setNoResult(true);
+        const refreshToken = cookies.get('RefreshToken');
+
+        const users = await getSearchList(e.target.value, accessTState.accessToken, refreshToken);
+        dispatch( setSearchList(users) );
+    
+        if(users.length > 0) setNoResult(false);
+        else setNoResult(true);
       }, 1000);
 
       setCurrTimeout(timeout);

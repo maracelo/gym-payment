@@ -24,6 +24,10 @@ export async function login(req: Request, res: Response){
         return res.status(400).json({err: 'Invalid email or password'});
 
     const refreshToken = jwt.sign({adminId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
+    const accessToken =  jwt.sign(
+        {adminId: admin.id, name: admin.name, profile_pic: admin.profile_pic},
+        process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: '1h'}
+    );
 
     const sevenDaysDate = new Date(Date.now() + 604800000);
 
@@ -35,7 +39,8 @@ export async function login(req: Request, res: Response){
         if(!hasRToken)
             await RefreshToken.create({admin_id: admin.id, expiresin: sevenDaysDate, refresh_token: refreshToken});
         
-        return res.json({refreshToken});
+        
+        return res.json({refreshToken, accessToken});
 
     }catch(err){
         console.log(err);
@@ -74,6 +79,10 @@ export async function create(req: Request, res: Response){
         if(!admin) throw Error('Admin not created. Err: ' + admin);
 
         const refreshToken = jwt.sign({adminId: admin.id}, process.env.REFRESH_TOKEN_SECRET as string, {expiresIn: '7d'});
+        const accessToken =  jwt.sign(
+            {adminId: admin.id, name: admin.name, profile_pic: admin.profile_pic},
+            process.env.ACCESS_TOKEN_SECRET as string, {expiresIn: '1h'}
+        );
 
         const sevenDaysDate = new Date(Date.now() + 604800000);
 
@@ -84,7 +93,7 @@ export async function create(req: Request, res: Response){
         if(!hasRToken)
             await RefreshToken.create({admin_id: admin.id, expiresin: sevenDaysDate, refresh_token: refreshToken});
 
-        return res.status(201).json({refreshToken});
+        return res.status(201).json({refreshToken, accessToken});
 
     }catch(err){
         console.log(err);

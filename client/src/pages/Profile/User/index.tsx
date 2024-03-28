@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import Cookies from "universal-cookie";
 import { Container, Info } from "../styled";
 
 import useAppSelector from "../../../redux/typedUseSelectorHook";
@@ -18,6 +19,7 @@ type User = {
 function User(){
   const { id } = useParams();
   const navigate = useNavigate();
+  const cookies = new Cookies();
   
   const [showCamIcon, setShowCamIcon] = useState(false);
   
@@ -39,10 +41,13 @@ function User(){
   useEffect(() =>{
     (async () =>{
       if(accessTState.accessToken){
+        const refreshToken = cookies.get('RefreshToken');
+
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'user/' + id, {
           headers: {
             'method': 'get',
             'Accept': 'application/json',
+            'Refresh-Token': refreshToken,
             'Authorization': 'Bearer ' + accessTState.accessToken
           }
         });
@@ -96,9 +101,12 @@ function User(){
 
     if(newData){
       try{
+        const refreshToken = cookies.get('RefreshToken');
+
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'user/' + id, {
           method: 'put',
           headers: {
+            'Refresh-Token': refreshToken,
             'Authorization': 'Bearer ' + accessTState.accessToken,
             'Content-Type': 'application/json'
           },
@@ -141,9 +149,12 @@ function User(){
       setUserDelPassword('');
       
       try{
+        const refreshToken = cookies.get('RefreshToken');
+
         const req = await fetch(import.meta.env.VITE_API_BASE_URL + 'user/' + id, {
           method: 'delete',
           headers: {
+            'Refresh-Token': refreshToken,
             'Authorization': 'Bearer ' + accessTState.accessToken,
             'Content-Type': 'application/json'
           },
@@ -178,10 +189,13 @@ function User(){
     if(pic){
       const newPic = new FormData();
       newPic.append('newPic', pic);
+
+      const refreshToken = cookies.get('RefreshToken');
   
       const req = await fetch(`${import.meta.env.VITE_API_BASE_URL}user/${id}/newpic`, {
         method: 'put',
         headers: {
+          'Refresh-Token': refreshToken,
           'Authorization': 'Bearer ' + accessTState.accessToken
         },
         body: newPic
@@ -199,10 +213,13 @@ function User(){
   }
 
   const handleRemovePic = async () =>{
+    const refreshToken = cookies.get('RefreshToken');
+
     const req = await fetch(`${import.meta.env.VITE_API_BASE_URL}user/${id}/removepic`, {
       method: 'put',
       headers: {
-        authorization: 'Bearer ' + accessTState.accessToken
+        'Refresh-Token': refreshToken,
+        'Authorization': 'Bearer ' + accessTState.accessToken
       }
     });
 
