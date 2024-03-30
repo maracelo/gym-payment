@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import mainRoutes from "./routes/index";
 import path from "path";
@@ -20,6 +20,13 @@ app.use( express.urlencoded({ extended: true })); //   TEMP JUST FOR TESTS     [
 app.use(cookieParser());
 
 app.use('/api', mainRoutes);
+app.use((err: any, req: Request, res: Response, next: NextFunction) =>{
+    console.log('Error: ' + err);
+    
+    if(err && err.name === 'AuthenticationError') return res.status(401).json({err: 'Unauthorized'});
+    
+    res.status(500).json({err: 'System error'});
+});
 
 app.use((req: Request, res: Response) =>{
     res.status(404).json({err: 'Route not found'});
