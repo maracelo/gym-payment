@@ -29,28 +29,9 @@ function AdminLogin(){
   useEffect(() =>{
     (async() =>{
       let accessToken: string = accessTState.accessToken;
-
-      if(!checkAccessToken(accessToken)) accessToken = '';
-
       const refreshToken = cookies.get('RefreshToken');
 
-      if(!accessToken && refreshToken){
-        const getTokenRes = await getAccessToken(refreshToken);
-
-        if('err' in getTokenRes){
-          if(getTokenRes.err === 'server out') navigate('/serverout');
-
-          else{
-            setError(getTokenRes.err);
-            setTimeout(() =>{ setError('') }, 3000);
-          }
-          return;
-        }
-        
-        accessToken = getTokenRes.accessToken;
-      }
-
-      if(accessToken){
+      if(accessToken && refreshToken){
         dispatch(setAccessToken(accessToken));
         navigate('/');
       }
