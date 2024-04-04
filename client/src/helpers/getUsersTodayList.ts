@@ -12,7 +12,9 @@ async function getUsersTodayList(accessToken: string, refreshToken: string){
 
     const res = await req.json();
 
-    if(res.todayUsers) return res.todayUsers;
+    if('err' in res) return {err: res.err};
+    
+    if('todayUsers' in res) return {todayUsers: res.todayUsers};
 
   }catch(err){ console.log(err) }
 
