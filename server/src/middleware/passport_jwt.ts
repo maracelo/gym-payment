@@ -20,7 +20,9 @@ passport.use(new Strategy(opts, async (req: any, jwt_payload: any, done: any) =>
   
   try{
     validRefreshT = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
-  }catch(err){}
+  }catch(err){
+    return done(err, false);
+  }
 
   try{
     const admin = await Admin.findOne({_id: jwt_payload.adminId});
