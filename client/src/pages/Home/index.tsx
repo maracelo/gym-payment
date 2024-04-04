@@ -27,30 +27,45 @@ function Home(){
   const [lateList, setLateList] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  let todayListWindow: never | any[] = [];
-
   useEffect(() =>{
     (async () =>{
       const refreshToken = cookies.get('RefreshToken');
 
-      if(accessTState.accessToken){
+      if(accessTState.accessToken && refreshToken){
         if(todayList.length < 1){
           const todayListRes = await getUsersTodayList(accessTState.accessToken, refreshToken);
           
-          if('err' in todayListRes) navigate('/serverout');
+          if('err' in todayListRes){
+            if(todayListRes.err === 'server out') navigate('/serverout');
+            
+            else{
+              cookies.remove('RefreshToken', {path: '/'});
+              navigate('/admin/login');
+            }
 
-          if(todayListRes){
-            setTodayList(todayListRes);
+            return;
+          } 
+
+          if(todayListRes.todayUsers){
+            setTodayList(todayListRes.todayUsers);
             setLoading(false);
           }
         }
         if(lateList.length < 1){
           const lateListRes = await getUsersLateList(accessTState.accessToken, refreshToken);
 
-          if('err' in lateListRes) navigate('/serverout');
+          if('err' in lateListRes){
+            if(lateListRes.err === 'server out') navigate('/serverout');
+            
+            else{
+              cookies.remove('RefreshToken', {path: '/'});
+              navigate('/admin/login');
+              return;
+            }
+          } 
 
-          if(lateListRes){
-            setLateList(lateListRes);
+          if(lateListRes.lateUsers){
+            setLateList(lateListRes.lateUsers);
             setLoading(false);
           }
         }
@@ -79,10 +94,10 @@ function Home(){
       const refreshToken = cookies.get('RefreshToken');
   
       const todayListRes = await getUsersTodayList(token, refreshToken);
-      if(todayListRes) setTodayList(todayListRes);
+      if(todayListRes) setTodayList(todayListRes.todayUsers);
   
       const lateListRes = await getUsersLateList(token, refreshToken);
-      if(lateListRes) setLateList(lateListRes);
+      if(lateListRes) setLateList(lateListRes.lateUsers);
 
       if(searchState.search){
         const searchList = await getSearchList(searchState.search, accessTState.accessToken, refreshToken);
@@ -165,8 +180,6 @@ function Home(){
             <List>
               <ul>
                 {todayList.length > 0 && todayList.map((el: any) =>{
-                  todayListWindow.push({id: el._id, windowOpen: false});
-
                   return (
                     <User $status={el['payment_status']} key={el._id} onClick={handleOpenUserWindow}>
                       <div>
