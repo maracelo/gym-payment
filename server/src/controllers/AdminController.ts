@@ -211,6 +211,8 @@ export async function del(req: Request, res: Response){
 
         await Admin.deleteOne({_id: id});
 
+        await RefreshToken.deleteOne({user_id: id});
+
         return res.json({success: 'Admin deleted'});
 
     }catch(err){
