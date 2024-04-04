@@ -12,7 +12,9 @@ async function getUsersLateList(accessToken: string, refreshToken: string){
   
     const res = await req.json();
   
-    if(res.lateUsers) return res.lateUsers;
+    if('err' in res) return {err: res.err}
+    
+    if('lateUsers' in res) return {lateUsers: res.lateUsers};
 
   }catch(err){ console.log(err) }
 
