@@ -104,7 +104,13 @@ function Home(){
         if(searchList) dispatch( setSearchList(searchList) );
       }
     }else if('err' in res){
-      alert(res.err);
+      if(res.err === 'Unauthorized'){
+        cookies.remove('RefreshToken', {path: '/'});
+        navigate('/admin/login');
+        return;
+      }
+
+      alert('Error: ' + res.err);
     }
   }
 

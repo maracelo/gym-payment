@@ -26,16 +26,16 @@ function App() {
     const test = setInterval(async () =>{
       const url = location.href.split('/');
       const route = url[url.length - 1];
-
+      
       if(!['serverout', 'login', 'register'].includes(route)){
-
+        
         const refreshToken = cookies.get('RefreshToken');
         
         let validAccessT = checkAccessToken(accessTState.accessToken);
-
+        
         if(!validAccessT && refreshToken){
           const getTokenRes = await getAccessToken(refreshToken);
-  
+
           if('err' in getTokenRes){
             if(getTokenRes.err === 'server out') navigate('/serverout');
   
@@ -51,7 +51,7 @@ function App() {
           validAccessT = true;
         } 
   
-        if(!validAccessT){
+        if(!validAccessT || !refreshToken){
           cookies.remove('RefreshToken', {path: '/'});
           dispatch(setAccessToken(''));
           navigate('/admin/login');
