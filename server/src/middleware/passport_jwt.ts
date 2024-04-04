@@ -21,6 +21,8 @@ passport.use(new Strategy(opts, async (req: any, jwt_payload: any, done: any) =>
   
   try{
     validRefreshT = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
+
+    if(validRefreshT) validRefreshT = await RefreshToken.findOne({refresh_token: refreshToken});
   }catch(err){
     return done(err, false);
   }
