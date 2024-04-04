@@ -6,7 +6,7 @@ async function getAccessToken(refreshToken: string): Promise<{accessToken: strin
         'Accept': 'application/json',
         'withCredentials': 'include',
         'SameSite': 'none',
-        'Authorization': 'Bearer ' + refreshToken
+        'Refresh-Token': refreshToken
       }
     });
   
