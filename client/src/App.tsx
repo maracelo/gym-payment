@@ -22,47 +22,45 @@ function App() {
   const accessTState = useAppSelector(state => state.accessToken)
   const darkState = useAppSelector(state => state.darkMode);
 
-  const [validToken, setValidToken] = useState<boolean>(false);
-
   useEffect(() =>{
-    (async () =>{
+    const test = setInterval(async () =>{
       const url = location.href.split('/');
+      const route = url[url.length - 1];
 
-      if(url[url.length - 1] !== 'serverout'){
-        let token: string = accessTState.accessToken;
-  
-        if(!checkAccessToken(token)) token = '';
-  
+      if(!['serverout', 'login', 'register'].includes(route)){
+
         const refreshToken = cookies.get('RefreshToken');
-  
-        if(!token && refreshToken){
+        
+        let validAccessT = checkAccessToken(accessTState.accessToken);
+
+        if(!validAccessT && refreshToken){
           const getTokenRes = await getAccessToken(refreshToken);
   
           if('err' in getTokenRes){
             if(getTokenRes.err === 'server out') navigate('/serverout');
   
             else{
-              navigate(import.meta.env.VITE_BASE_URL + 'admin/login');
-            }
+              cookies.remove('RefreshToken', {path: '/'});
+              navigate('admin/login');
+            } 
+
             return;
           }
           
-          token = getTokenRes.accessToken
           dispatch(setAccessToken(getTokenRes.accessToken));
+          validAccessT = true;
         } 
   
-        if(token){
-          setValidToken(true);
-          setTimeout(() =>{ 
-            setValidToken(false);
-            dispatch(setAccessToken(''));
-          }, 3600000);
+        if(!validAccessT){
+          cookies.remove('RefreshToken', {path: '/'});
+          dispatch(setAccessToken(''));
+          navigate('/admin/login');
         } 
-        
-        else navigate('/admin/login');
       }
-    })();
-  }, [validToken]);
+    }, 5000);
+
+    return () => clearInterval(test);
+  }, [accessTState.accessToken]);
 
   return (
     <MainContainer $dark={darkState.dark ? 'true' : 'false'}>
@@ -75,4 +73,4 @@ function App() {
   );
 }
 
-export default App
+export default App;
