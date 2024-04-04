@@ -6,15 +6,15 @@ import Admin from "../models/Admin";
 
 dotenv.config();
 
-export async function accessToken(req: Request, res: Response){
-    const refreshToken = req.headers.authorization!.split(' ')[1];
+export async function refresh(req: Request, res: Response){
+    const refreshToken = req.headers['refresh-token'];
 
-    if(refreshToken && refreshToken != 'undefined'){
+    if(refreshToken && typeof refreshToken === 'string'){
         
-        let adminId = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
+        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET as string);
     
-        if(adminId){
-            if(typeof adminId != 'string') adminId = adminId.adminId;
+        if(typeof decoded !== 'string' && 'adminId' in decoded){
+            const adminId = decoded.adminId;
 
             const admin = await Admin.findOne({_id: adminId});
 
