@@ -55,8 +55,14 @@ function Admin(){
         
         const res = await req.json();
   
-        if('email' !in res){
-          alert('Admin not found');
+        if('err' in res){
+          if(res.err === 'Unauthorized'){
+            cookies.remove('RefreshToken', {path: '/'});
+            navigate('/admin/login');
+            return;
+          }
+          
+          alert('Error: ' + res.err);
           navigate('/');
         }else{
           let { name, email, phone, profile_pic } = res.admin;

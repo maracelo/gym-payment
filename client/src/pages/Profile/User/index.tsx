@@ -54,7 +54,16 @@ function User(){
 
         const res = await req.json();
         
-        if('user' in res){
+        if('err' in res){
+          if(res.err === 'Unauthorized'){
+            cookies.remove('RefreshToken', {path: '/'});
+            navigate('/admin/login');
+            return;
+          }
+          
+          alert('Error: ' + res.err);
+          navigate('/');
+        }else{
           let {name, email, phone, plan, profile_pic} = res.user;
 
           setUserInfo({ name, email, phone, plan, profile_pic });
@@ -62,9 +71,6 @@ function User(){
           setInputEmail(email);
           setInputPhone(phone);
           setInputPlan(plan === 'vip' ? true : false);
-        }else{
-          alert('Invalid User Id');
-          navigate('/');
         }
       }
     })();
