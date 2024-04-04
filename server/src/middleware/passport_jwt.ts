@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 
 import Admin from "../models/Admin";
+import RefreshToken from "../models/RefreshToken";
 
 dotenv.config();
 
@@ -27,7 +28,12 @@ passport.use(new Strategy(opts, async (req: any, jwt_payload: any, done: any) =>
   try{
     const admin = await Admin.findOne({_id: jwt_payload.adminId});
 
-    if(admin && validRefreshT) return done(null, admin, admin._id);
+    if(admin && validRefreshT){
+
+      const dbRefreshToken = await RefreshToken.findOne({admin_id: admin._id});
+
+      if(dbRefreshToken) return done(null, admin, admin._id);
+    }
     
     return done(null, false);
 
