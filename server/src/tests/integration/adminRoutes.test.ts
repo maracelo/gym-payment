@@ -11,7 +11,8 @@ import genRandPhoneNum from "../../helpers/genRandPhoneNum";
 dotenv.config();
 
 describe('test admin\'s routes', () =>{
-    let firstAdminToken = '';
+    let accessToken = '';
+    let refreshToken = '';
     let firstAdminId = '';
 
     beforeAll(async () =>{
@@ -31,19 +32,25 @@ describe('test admin\'s routes', () =>{
             .expect('Content-Type', /json/)
             .expect(201)
         .then(res =>{
-            let token = jwt.verify(res.body.token, process.env.ACCESS_TOKEN_SECRET as string) as any;
-            firstAdminToken = `Bearer ${res.body.token}`;
-            firstAdminId = token.id ?? '';
+            try{
+                accessToken = `Bearer ${res.body.accessToken}`;
+                refreshToken = res.body.refreshToken;
+                const decoded = jwt.verify(res.body.accessToken, process.env.ACCESS_TOKEN_SECRET as string) as any;
+                firstAdminId = decoded.adminId ?? '';
+            }catch(err){
+                throw Error(err as string);
+            }
         });
     });
 
     it('should get created admin', async () =>{
         await request(app)
             .get(`/api/admin/${firstAdminId}`)
-            .set('Authorization', firstAdminToken)
+            .set('Authorization', accessToken)
+            .set('Refresh-Token', refreshToken)
             .expect('Content-Type', /json/)
             .expect(200)
-        .then(res => expect(res.body.email).toBe('test@test.test'));
+        .then(res =>{ expect(res.body.admin.email).toBe('test@test.test') });
     });
 
     it('should make login', async () =>{
@@ -55,10 +62,13 @@ describe('test admin\'s routes', () =>{
             .expect(200)
         .then(res =>{
             try{
-                jwt.verify(res.body.token, process.env.ACCESS_TOKEN_SECRET as string) as any;
-                firstAdminToken = `Bearer ${res.body.token}`;
+                jwt.verify(res.body.accessToken, process.env.ACCESS_TOKEN_SECRET as string) as any;
+                jwt.verify(res.body.refreshToken, process.env.REFRESH_TOKEN_SECRET as string) as any;
+                accessToken = `Bearer ${res.body.accessToken}`;
+                refreshToken = res.body.refreshToken;
             }catch(err){
                 console.log(err);
+                throw Error('JWT Error');
             }
         });
     })
@@ -138,11 +148,12 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`name=${name}`)
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.name).toBe(name) });
+            .then(res =>{ expect(res.body.admin.name).toBe(name) });
         });
 
         test('update email', async () =>{
@@ -151,11 +162,12 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`email=${email}`)
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.email).toBe(email) })
+            .then(res =>{ expect(res.body.admin.email).toBe(email) })
         });
 
         test('update password', async () =>{
@@ -165,12 +177,13 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`new_password=${new_password}&current_password=${current_password}`)
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
             .then(res =>{
-                expect(bcrypt.compareSync(new_password, res.body.password)).toBe(true);
+                expect(bcrypt.compareSync(new_password, res.body.admin.password)).toBe(true);
             });
         });
 
@@ -180,11 +193,12 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send(`phone=${phone}`)
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.phone).toBe(phone) })
+            .then(res =>{ expect(res.body.admin.phone).toBe(phone) })
         });
     });
 
@@ -194,7 +208,8 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('name=t')
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -205,7 +220,8 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('email=t')
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -216,7 +232,8 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('email=test2@test.test')
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -227,7 +244,8 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('new_password=t&current_password=t')
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -242,7 +260,8 @@ describe('test admin\'s routes', () =>{
             await request(app)
                 .put(`/api/admin/${firstAdminId}`)
                 .send('phone=0')
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -254,19 +273,32 @@ describe('test admin\'s routes', () =>{
         it('should delete admin', async () =>{
             await request(app)
                 .delete(`/api/admin/${firstAdminId}`)
-                .set('Authorization', firstAdminToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .send('password=Test2test')
                 .expect('Content-Type', /json/)
                 .expect(200)
             .then(res =>{ expect(res.body).toStrictEqual({success: 'Admin deleted'}) });
         });
+
+        it('should login in the other admin', async () =>{
+            await request(app)
+                .post('/api/admin/login')
+                .send('email=test2@test.test&password=Test1test')
+                .set('Accept', 'application/json')
+            .then((res) =>{
+                accessToken = `Bearer ${res.body.accessToken}`;
+                refreshToken = res.body.refreshToken;
+                expect(accessToken).not.toBeUndefined();
+            });
+        })
     
         it('should not find admin', async () =>{ // make login in another account and check if user exists in db
             await request(app)
                 .get(`/api/admin/${firstAdminId}`)
-                .set('Authorization', firstAdminToken)
-                .send('password=Test2test')
-            .expect(401);
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
+            .expect(404);
         });
     });
 });
