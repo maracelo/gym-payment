@@ -7,7 +7,8 @@ import genRandPhoneNum from '../../helpers/genRandPhoneNum';
 
 describe("test user's routes", () =>{
     let firstUserId = '';
-    let adminLoginToken = '';
+    let accessToken = '';
+    let refreshToken = '';
 
     beforeAll(async () =>{
         await MongoConnect();
@@ -15,7 +16,10 @@ describe("test user's routes", () =>{
         await request(app)
             .post('/api/admin/register')
             .send('name=test&email=test@test.test&password=Test1test&password_confirmation=Test1test')
-        .then(res =>{ adminLoginToken = `Bearer ${res.body.token}` });
+        .then(res =>{
+            accessToken = `Bearer ${res.body.accessToken}`
+            refreshToken = res.body.refreshToken;
+        });
     });
 
     afterAll(async () =>{
@@ -26,22 +30,24 @@ describe("test user's routes", () =>{
     it('should create a user', async () =>{
         await request(app)
             .post('/api/user')
-            .send('name=test&email=test@test.test&plan=vip')
-            .set('Authorization', adminLoginToken)
+            .send('name=test&email=test@test.test&plan=true')
+            .set('Authorization', accessToken)
+            .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(201)
-        .then(res =>{ firstUserId = res.body._id });
+        .then(res =>{ firstUserId = res.body.user._id; });
     });
     
     it('should get created user', async () =>{
         await request(app)
             .get(`/api/user/${firstUserId}`)
-            .set('Authorization', adminLoginToken)
+            .set('Authorization', accessToken)
+            .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(200)
-        .then(res =>{ expect(res.body.email).toBe('test@test.test') });
+        .then(res =>{ expect(res.body.user.email).toBe('test@test.test') });
     });
 
     describe('it should not create an user', () =>{
@@ -49,8 +55,9 @@ describe("test user's routes", () =>{
         test('existing email', async () =>{
             await request(app)
                 .post('/api/user')
-                .send('name=test&email=test@test.test&plan=vip')
-                .set('Authorization', adminLoginToken)
+                .send('name=test&email=test@test.test&plan=true')
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -60,8 +67,9 @@ describe("test user's routes", () =>{
         test('wrong email', async () =>{
             await request(app)
                 .post('/api/user')
-                .send('name=t@test.test&plan=vip')
-                .set('Authorization', adminLoginToken)
+                .send('name=t@test.test&plan=true')
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -71,8 +79,9 @@ describe("test user's routes", () =>{
         test('wrong name', async () =>{
             await request(app)
                 .post('/api/user')
-                .send('name=t&email=test2@test.test&plan=vip')
-                .set('Authorization', adminLoginToken)
+                .send('name=t&email=test2@test.test&plan=true')
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -83,7 +92,8 @@ describe("test user's routes", () =>{
             await request(app)
                 .post('/api/user')
                 .send('name=test&email=test2@test.test&plan=test')
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -93,8 +103,9 @@ describe("test user's routes", () =>{
         test('wrong phone', async () =>{
             await request(app)
                 .post('/api/user')
-                .send('name=test&email=test2@test.test&plan=vip&phone=0')
-                .set('Authorization', adminLoginToken)
+                .send('name=test&email=test2@test.test&plan=true&phone=0')
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -105,8 +116,9 @@ describe("test user's routes", () =>{
     it('should add another user', async () =>{
         await request(app)
             .post('/api/user')
-            .send('name=test2&email=test2@test.test&plan=normal&phone=+5584900000000')
-            .set('Authorization', adminLoginToken)
+            .send('name=test2&email=test2@test.test&plan=false&phone=+5584900000000')
+            .set('Authorization', accessToken)
+            .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(201)
@@ -114,12 +126,13 @@ describe("test user's routes", () =>{
    
     it('should get 2 users', async () =>{
         await request(app)
-            .get('/api/users')
-            .set('Authorization', adminLoginToken)
+            .get('/api/usertoday')
+            .set('Authorization', accessToken)
+            .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .expect('Content-type', /json/)
             .expect(200)
-        .then(res =>{ expect(res.body.users.length).toBe(2) })
+        .then(res =>{ expect(res.body.todayUsers.length).toBe(2) })
     });
 
     describe('it should update user', () =>{
@@ -130,11 +143,12 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`name=${name}`)
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.name).toBe(name) });
+            .then(res =>{ expect(res.body.user.name).toBe(name) });
         });
 
         test('update email', async () =>{
@@ -143,24 +157,26 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`email=${email}`)
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.email).toBe(email) });
+            .then(res =>{ expect(res.body.user.email).toBe(email) });
         });
 
         test('update plan', async () =>{
-            const plan = 'normal';
+            const plan = false;
 
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`plan=${plan}`)
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.plan).toBe(plan) })
+            .then(res =>{ expect(res.body.user.plan).toBe(plan.toString()) })
         });
 
         test('update phone', async ()=>{
@@ -169,11 +185,12 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send(`phone=${phone}`)
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(200)
-            .then(res =>{ expect(res.body.phone).toBe(phone) })
+            .then(res =>{ expect(res.body.user.phone).toBe(phone) })
         });
     });
 
@@ -183,7 +200,8 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('name=t')
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -194,7 +212,8 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('email=t')
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -205,7 +224,8 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('email=test2@test.test')
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -216,7 +236,8 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('plan=t')
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-type', /json/)
                 .expect(400)
@@ -227,7 +248,8 @@ describe("test user's routes", () =>{
             await request(app)
                 .put(`/api/user/${firstUserId}`)
                 .send('phone=0')
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .expect('Content-Type', /json/)
                 .expect(400)
@@ -240,7 +262,9 @@ describe("test user's routes", () =>{
         it('should delete user', async () =>{
             await request(app)
                 .delete(`/api/user/${firstUserId}`)
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
+                .send('password=Test1test')
                 .expect('Content-type', /json/)
                 .expect(200)
             .then(res =>{ expect(res.body).toStrictEqual({success: 'User deleted'}) });
@@ -249,7 +273,8 @@ describe("test user's routes", () =>{
         it('should not find user', async () =>{
             await request(app)
                 .get(`/api/user/${firstUserId}`)
-                .set('Authorization', adminLoginToken)
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
                 .expect(404)
             .then(res =>{ expect(res.body).toStrictEqual({ err: 'User not found' }) })
         })
