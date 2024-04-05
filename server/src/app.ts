@@ -21,9 +21,9 @@ app.use(cookieParser());
 
 app.use('/api', mainRoutes);
 app.use((err: any, req: Request, res: Response, next: NextFunction) =>{
-    console.log('Error: ' + err);
+    if(err && (err.name === 'AuthenticationError' || err.name === 'JsonWebTokenError')) return res.status(401).json({err: 'Unauthorized'});
     
-    if(err && err.name === 'AuthenticationError') return res.status(401).json({err: 'Unauthorized'});
+    console.log('Error: ' + err);
     
     res.status(500).json({err: 'System error'});
 });
