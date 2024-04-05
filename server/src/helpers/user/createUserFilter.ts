@@ -23,7 +23,7 @@ async function createUserFilter(data: any): filterReturn{
 
     if(await User.findOne({email})) return {err: 'Email already exists'};
 
-    if(typeof plan !== 'boolean') return {err: 'Invalid plan'};
+    if(plan != 'true' && plan != 'false') return {err: 'Invalid plan'};
 
     let filteredPhone = null;
 

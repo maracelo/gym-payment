@@ -2,7 +2,6 @@ import validator from "validator";
 
 import User, { UserType } from "../../models/User";
 
-import planValidator from "./planValidator";
 import phoneValidator from "../phoneValidator";
 
 type updateFields = {
@@ -33,7 +32,7 @@ async function updateUserFilter(data: any, user: UserType): filterReturn{
     }
 
     if(plan){
-        if(!planValidator(plan)) return {err: 'Invalid plan'};
+        if(plan != 'true' && plan != 'false') return {err: 'Invalid plan'};
         if(plan !== user.plan) updateFields.plan = plan;
     }
 
