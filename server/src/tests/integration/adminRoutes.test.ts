@@ -22,6 +22,21 @@ describe('test admin\'s routes', () =>{
     });
 
     afterAll(async () =>{
+        fs.readdir(path.join(__dirname, '../../../public/media/images/'), {withFileTypes: true}, (err, files) =>{
+            
+            files.forEach((file: any) =>{
+                if(file.name !== 'default_profile_pic.jpg'){
+                    
+                    fs.unlink(path.join(__dirname, `../../../public/media/images/${file.name}`), (unlinkErr) =>{
+                            if(unlinkErr) console.error('Error deleting file:', unlinkErr);
+
+                            else console.log('File deleted successfully');
+                        }
+                    );
+                }
+            });
+        });
+
         await MongoClear();
         await MongoDisconnect();
     });
