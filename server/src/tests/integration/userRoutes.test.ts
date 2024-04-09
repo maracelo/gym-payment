@@ -128,15 +128,38 @@ describe("test user's routes", () =>{
         .then(res =>{secondUserId = res.body.user._id})
     });
    
-    it('should get 2 users', async () =>{
-        await request(app)
-            .get('/api/usertoday')
-            .set('Authorization', accessToken)
-            .set('Refresh-Token', refreshToken)
-            .set('Accept', 'application/json')
-            .expect('Content-type', /json/)
-            .expect(200)
-        .then(res =>{ expect(res.body.todayUsers.length).toBe(2) })
+    describe('should get 2 users', () =>{
+
+        test('/usertoday', async () =>{
+            await request(app)
+                .get('/api/usertoday')
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
+                .set('Accept', 'application/json')
+                .expect(200)
+            .then(res =>{
+                expect(res.body.todayUsers.length).toBe(2);
+            });
+        });
+            
+        test('/userlate', async () =>{
+            await request(app)
+                .put(`/api/payment/${firstUserId}`)
+                .set('Authorization', accessToken)
+            .set('Refresh-Token', refreshToken);
+            await request(app)
+                .put(`/api/payment/${secondUserId}`)
+                .set('Authorization', accessToken)
+            .set('Refresh-Token', refreshToken);
+
+            await request(app)
+                .get('/api/userlate')
+                .set('Authorization', accessToken)
+                .set('Refresh-Token', refreshToken)
+                .set('Accept', 'application/json')
+                .expect(200)
+            .then(res =>{ expect(res.body.lateUsers.length).toBe(2) })
+        });
     });
 
     describe('it should update user', () =>{
