@@ -28,6 +28,7 @@ describe('test refresh route', () =>{
       .get('/api/refresh')
       .set('Authorization', accessToken)
       .set('Refresh-Token', refreshToken)
+      .expect(200)
     .then(res =>{
       expect(res.body.accessToken).toBeDefined();
     });
