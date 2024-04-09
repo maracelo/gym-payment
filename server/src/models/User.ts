@@ -1,5 +1,4 @@
 import { Schema, Model, model, connection } from "mongoose";
-import getTodayDay from "../helpers/getTodayDay";
 
 export type UserType = {
     name: string,
