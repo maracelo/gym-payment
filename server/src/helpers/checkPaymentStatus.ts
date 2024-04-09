@@ -1,5 +1,5 @@
 import User from "../models/User";
-import getTodayDay from "./getTodayDay";
+import getTodayDayAndMonth from "./getTodayDayAndMonth";
 
 async function checkPaymentStatus(){
     const date = new Date();
@@ -11,10 +11,12 @@ async function checkPaymentStatus(){
     if(currHour != 0) difference = 24 - currHour;
     
     setTimeout(async () =>{
-        await User.updateMany({payment_status: 'late'}, {payment_day: getTodayDay()});
+        const {day} = getTodayDayAndMonth();
+
+        await User.updateMany({payment_status: 'late'}, {payment_day: day});
 
         setInterval(async () =>{
-            await User.updateMany({payment_status: 'late'}, {payment_day: getTodayDay()});
+            await User.updateMany({payment_status: 'late'}, {payment_day: day});
         }, 86400000);
 
     }, difference * 3600000);

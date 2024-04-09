@@ -7,12 +7,19 @@ import User from "../models/User";
 
 import updateUserFilter from "../helpers/user/updateUserFilter";
 import createUserFilter from "../helpers/user/createUserFilter";
-import getTodayDay from "../helpers/getTodayDay";
+import getTodayDayAndMonth from "../helpers/getTodayDayAndMonth";
 
 export async function getTodayList(req: Request, res: Response){
+    const {day, month} = getTodayDayAndMonth();
+
     try{
         const todayUsers = await User.aggregate([{
-            $match: {$expr: {$eq: [{$dayOfMonth: '$createdAt'}, getTodayDay()]} }
+            $match: {$expr: {
+                $and: [
+                    {$eq: [{$dayOfMonth: '$createdAt'}, day]},
+                    {$eq: [{$month: '$createdAt'}, month]}
+                ]
+            } }
         }]);
         return res.json({todayUsers});
     }catch(err){
