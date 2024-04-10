@@ -32,7 +32,7 @@ async function createUserFilter(data: any): filterReturn{
         if(!filteredPhone) return {err: 'Invalid phone number'};
     }
 
-    return {name, email, plan: plan ? 'vip' : 'normal', phone: filteredPhone ?? null};
+    return {name, email, plan: plan === 'true' ? 'vip' : 'normal', phone: filteredPhone ?? null};
 }
 
 export default createUserFilter;
