@@ -44,7 +44,7 @@ function AddForm({ setTodayList }: Props){
         'Refresh-Token': refreshToken,
         'Authorization': 'Bearer ' + accessToken
       },
-      body: JSON.stringify({name, email, phone, plan: vip})
+      body: JSON.stringify({name, email, phone, plan: vip.toString()})
     });
 
     setName('');
