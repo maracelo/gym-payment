@@ -15,7 +15,7 @@ type updateFields = {
 type filterReturn = Promise<updateFields | {err: string}>;
 
 async function updateUserFilter(data: any, user: UserType): filterReturn{
-    const { name, email, plan, phone, profile_pic } = data;
+    const { name, email, plan, phone } = data;
     let updateFields: updateFields = {};
 
     if(name){
