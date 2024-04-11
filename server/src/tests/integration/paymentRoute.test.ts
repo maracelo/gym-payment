@@ -13,6 +13,7 @@ describe('test payment route', () =>{
     await request(app)
       .post('/api/admin/register')
       .send('name=test&email=test@test.test&password=Test1test&password_confirmation=Test1test')
+      .expect(201)
     .then(res =>{
       accessToken = `Bearer ${res.body.accessToken}`;
       refreshToken = res.body.refreshToken;
@@ -23,6 +24,7 @@ describe('test payment route', () =>{
       .send('name=test&email=test@test.test&plan=true')
       .set('Authorization', accessToken)
       .set('Refresh-Token', refreshToken)
+      .expect(201)
     .then(res =>{
       userId = res.body.user._id;
     });

@@ -295,6 +295,7 @@ describe('test admin\'s routes', () =>{
             .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .attach('newPic', path.join(__dirname, 'testFiles/testImage.jpg'))
+            .expect(200)
         .then(res =>{
             expect(res.body.admin.email).toBe('test3@test.test');
             expect(res.body.admin.profile_pic).toBeDefined();
@@ -315,6 +316,7 @@ describe('test admin\'s routes', () =>{
             .get(`/api/admin/${firstAdminId}`)
             .set('Authorization', accessToken)
             .set('Refresh-Token', refreshToken)
+            .expect(200)
         .then(res =>{
             oldProfilePicName = res.body.admin.profile_pic;
         });
@@ -325,6 +327,7 @@ describe('test admin\'s routes', () =>{
             .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .attach('newPic', path.join(__dirname, 'testFiles/testImage.jpg'))
+            .expect(200)
         .then(res =>{
             expect(res.body.admin.email).toBe('test3@test.test');
             expect(res.body.admin.profile_pic).toBeDefined();
@@ -345,6 +348,7 @@ describe('test admin\'s routes', () =>{
             .set('Authorization', accessToken)
             .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
+            .expect(200)
         .then(res =>{
             expect(res.body.admin.profile_pic).toBe(profilePicName);
         });
@@ -364,6 +368,7 @@ describe('test admin\'s routes', () =>{
                 .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .attach('newPic', path.join(__dirname, 'testFiles/text.txt'))
+                .expect(400)
             .then(res =>{
                 expect(res.body).toStrictEqual({err: 'Profile pic wasn\'t sent'});
             });
@@ -372,6 +377,7 @@ describe('test admin\'s routes', () =>{
                 .get(`/api/admin/${firstAdminId}`)
                 .set('Authorization', accessToken)
                 .set('Refresh-Token', refreshToken)
+                .expect(200)
             .then(res =>{
                 const profilePic = res.body.admin.profile_pic;
     
@@ -388,6 +394,7 @@ describe('test admin\'s routes', () =>{
                 .set('Authorization', accessToken)
                 .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
+                .expect(400)
             .then(res =>{
                 expect(res.body).toStrictEqual({err: 'Profile pic wasn\'t sent'});
             });
@@ -411,6 +418,7 @@ describe('test admin\'s routes', () =>{
                 .post('/api/admin/login')
                 .send('email=test2@test.test&password=Test1test')
                 .set('Accept', 'application/json')
+                .expect(200)
             .then((res) =>{
                 accessToken = `Bearer ${res.body.accessToken}`;
                 refreshToken = res.body.refreshToken;
@@ -423,6 +431,7 @@ describe('test admin\'s routes', () =>{
                 .get(`/api/admin/${firstAdminId}`)
                 .set('Authorization', accessToken)
                 .set('Refresh-Token', refreshToken)
+                .expect(404)
             .expect(404);
         });
     });
