@@ -34,7 +34,6 @@ describe('it should test updateAdminFilter function', () =>{
     const data = {name, email, phone, new_password: password, current_password: 'Test1test'};
 
     const filteredData: any = await updateAdminFilter(data, admin);
-    console.log(filteredData);
     expect(filteredData.name).toBe(name);
     expect(filteredData.email).toBe(email);
     expect(filteredData.phone).toBe(phone);
