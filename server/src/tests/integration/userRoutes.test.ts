@@ -19,6 +19,7 @@ describe("test user's routes", () =>{
         await request(app)
             .post('/api/admin/register')
             .send('name=test&email=test@test.test&password=Test1test&password_confirmation=Test1test')
+            .expect(201)
         .then(res =>{
             accessToken = `Bearer ${res.body.accessToken}`
             refreshToken = res.body.refreshToken;
@@ -158,14 +159,17 @@ describe("test user's routes", () =>{
         });
             
         test('/userlate', async () =>{
+            // turning all users' payment status late
             await request(app)
                 .put(`/api/payment/${firstUserId}`)
                 .set('Authorization', accessToken)
-            .set('Refresh-Token', refreshToken);
+                .set('Refresh-Token', refreshToken)
+            .expect(200);
             await request(app)
                 .put(`/api/payment/${secondUserId}`)
                 .set('Authorization', accessToken)
-            .set('Refresh-Token', refreshToken);
+                .set('Refresh-Token', refreshToken)
+            .expect(200)
 
             await request(app)
                 .get('/api/userlate')
@@ -308,6 +312,7 @@ describe("test user's routes", () =>{
             .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .attach('newPic', path.join(__dirname, 'testFiles/testImage.jpg'))
+            .expect(200)
         .then(res =>{
             expect(res.body.user.email).toBe('test3@test.test');
             expect(res.body.user.profile_pic).toBeDefined();
@@ -328,6 +333,7 @@ describe("test user's routes", () =>{
             .get(`/api/user/${firstUserId}`)
             .set('Authorization', accessToken)
             .set('Refresh-Token', refreshToken)
+            .expect(200)
         .then(res =>{
             oldProfilePicName = res.body.user.profile_pic;
         });
@@ -338,6 +344,7 @@ describe("test user's routes", () =>{
             .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
             .attach('newPic', path.join(__dirname, 'testFiles/testImage.jpg'))
+            .expect(200)
         .then(res =>{
             expect(res.body.user.email).toBe('test3@test.test');
             expect(res.body.user.profile_pic).toBeDefined();
@@ -358,6 +365,7 @@ describe("test user's routes", () =>{
             .set('Authorization', accessToken)
             .set('Refresh-Token', refreshToken)
             .set('Accept', 'application/json')
+            .expect(200)
         .then(res =>{
             expect(res.body.user.profile_pic).toBe(profilePicName);
         });
@@ -377,6 +385,7 @@ describe("test user's routes", () =>{
                 .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
                 .attach('newPic', path.join(__dirname, 'testFiles/text.txt'))
+                .expect(400)
             .then(res =>{
                 expect(res.body).toStrictEqual({err: 'Profile pic wasn\'t sent'});
             });
@@ -385,6 +394,7 @@ describe("test user's routes", () =>{
                 .get(`/api/user/${firstUserId}`)
                 .set('Authorization', accessToken)
                 .set('Refresh-Token', refreshToken)
+                .expect(200)
             .then(res =>{
                 const profilePic = res.body.user.profile_pic;
     
@@ -401,6 +411,7 @@ describe("test user's routes", () =>{
                 .set('Authorization', accessToken)
                 .set('Refresh-Token', refreshToken)
                 .set('Accept', 'application/json')
+                .expect(400)
             .then(res =>{
                 expect(res.body).toStrictEqual({err: 'Profile pic wasn\'t sent'});
             });
