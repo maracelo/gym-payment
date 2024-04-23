@@ -4,7 +4,7 @@ function checkAccessToken(accessToken: string){
   if(accessToken){
     const decoded = jwtDecode(accessToken);
   
-    if(decoded && decoded.exp && decoded.exp < Date.now()) return true;
+    if(decoded && decoded.exp && decoded.exp > (Date.now() / 1000)) return true;
   }
 
   return false;
