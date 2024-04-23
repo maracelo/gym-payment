@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 function Footer(){
   return (
     <FooterS>
-      <Link target="_blank" to="https://github.com/maracelo" >
-        <Links src={import.meta.env.VITE_BASE_URL + "public/assets/images/github-mark.png"} alt="" />
+      <Link target="_blank" to={import.meta.env.VITE_GITHUB_URL} >
+        <Links src={import.meta.env.VITE_BASE_URL + "public/assets/images/github-mark.png"} alt="Marcelo's github link" />
       </Link>
-      <Link target="_blank" to="https://www.linkedin.com/in/marcelo-augusto-de-souza-ferreira-76113a239/" >
-        <Links style={{padding: '3px'}} src={import.meta.env.VITE_BASE_URL + "public/assets/images/linkedin_mark.png"} alt="" />
+      <Link target="_blank" to={import.meta.env.VITE_LINKEDIN_URL} >
+        <Links style={{padding: '3px'}} src={import.meta.env.VITE_BASE_URL + "public/assets/images/linkedin_mark.png"} alt="Marcelo's linkedin link" />
       </Link>
     </FooterS>
   );
