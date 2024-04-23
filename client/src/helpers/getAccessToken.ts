@@ -14,7 +14,7 @@ async function getAccessToken(refreshToken: string): Promise<{accessToken: strin
   
     if('err' in res) return {err: res.err};
   
-    else if('accessToken') return {accessToken: res.accessToken};
+    else if('accessToken' in res) return {accessToken: res.accessToken};
 
   }catch(err){
     console.log(err);
