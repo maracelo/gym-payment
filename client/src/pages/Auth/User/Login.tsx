@@ -1,4 +1,4 @@
-import { Title, Container, Form, PassOption } from '../styled';
+/* import { Title, Container, Form, PassOption } from '../styled';
 import PasswordInput from '../../../components/PasswordInput';
 import { Link } from 'react-router-dom';
 
@@ -22,4 +22,6 @@ function UserLogin(){
   );
 }
 
-export default UserLogin;
+export default UserLogin; */
+
+/* TODO future implementation */
