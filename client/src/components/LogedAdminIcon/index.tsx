@@ -13,7 +13,7 @@ function LogedAdminIcon({ showLogedAdminBox, admin, handleShowLogedAdmin }: Prop
       className={showLogedAdminBox ? '' : 'closed'}
       src={admin.profile_pic} style={{backgroundImage: admin.profile_pic}}
       onClick={handleShowLogedAdmin}
-    />   
+    />
   )
 }
 
