@@ -1,4 +1,4 @@
-import { Title, Container, Form, PassOption } from '../styled';
+/* import { Title, Container, Form, PassOption } from '../styled';
 import PasswordInput from '../../../components/PasswordInput';
 import { Link } from 'react-router-dom';
 
@@ -21,4 +21,6 @@ function UserRegister(){
   );
 }
 
-export default UserRegister;
+export default UserRegister; */
+
+/* TODO future implementation */
