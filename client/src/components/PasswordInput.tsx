@@ -18,7 +18,7 @@ function Eye({ name, placeholder, password, handlePasswordChange }: Props){
   return (
     <label> 
       <input name={name} placeholder={placeholder ?? ''} type={eye ? 'password' : 'text'} value={password} onChange={handlePasswordChange} /> 
-      <img className='eye' onClick={handleEye} src={import.meta.env.VITE_BASE_URL + `public/assets/images/${eye ? 'hide' : 'eye'}.png`} alt={eye ? 'Hide password' : 'Show password'} />
+      <img className='eye' onClick={handleEye} src={import.meta.env.VITE_BASE_URL + `assets/images/${eye ? 'hide' : 'eye'}.png`} alt={eye ? 'Hide password' : 'Show password'} />
     </label>
   );
 }
