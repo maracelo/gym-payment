@@ -1,14 +1,17 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
-import { Title, Header as HeaderS, Dark, LogedAdminIcon, LogedAdminBox } from './styled';
+import Cookies from 'universal-cookie';
+import { jwtDecode } from 'jwt-decode';
+import { Title, Header as HeaderS, Dark } from './styled';
 
 import { setDarkMode } from '../../../redux/reducers/darkModeReducer';
 import useAppSelector from '../../../redux/typedUseSelectorHook';
-import { jwtDecode } from 'jwt-decode';
 import { setAccessToken } from '../../../redux/reducers/accessTokenReducer';
-import Cookies from 'universal-cookie';
+
 import SearchBar from '../../SearchBar';
+import LogedAdminBox from '../../LogedAdminBox';
+import LogedAdminIcon from '../../LogedAdminIcon';
 
 function Header(){
   const dispatch = useDispatch();
@@ -85,21 +88,21 @@ function Header(){
         {logedPage() && <SearchBar/>}
         <Dark onClick={handleTheme} src={import.meta.env.VITE_BASE_URL + `public/assets/images/${dark ? 'dark' : 'light'}.png`} />
         {logedPage() && loading &&
-          <div className='loading'></div>
+          <div className='loading' data-testid="loading"></div>
         }
         {logedPage() && !loading &&
           <>
             <LogedAdminIcon
-              id="logedAdminIcon" className={showLogedAdminBox ? '' : 'closed'}
-              src={admin.profile_pic} style={{backgroundImage: admin.profile_pic}}
-              onClick={handleShowLogedAdmin}
+              showLogedAdminBox={showLogedAdminBox}
+              admin={admin}
+              handleShowLogedAdmin={handleShowLogedAdmin}
             />
-            <LogedAdminBox id="logedAdmin" $dark={darkState.dark ? 'true' : 'false'}>
-              <div className={showLogedAdminBox ? '' : 'hidden'}>
-                <Link to={import.meta.env.VITE_BASE_URL + 'admin/' + admin.adminId}><p>{admin.name}</p></Link>
-                <p onClick={handleLogout}>Logout &lt;</p>
-              </div>
-            </LogedAdminBox>
+            <LogedAdminBox
+              admin={admin}
+              dark={darkState.dark ? 'true' : 'false'}
+              showLogedAdminBox={showLogedAdminBox}
+              handleLogout={handleLogout}
+            />
           </>
         }
       </nav>
