@@ -67,7 +67,7 @@ function SearchBar(){
       <SearchBarIcon
         id='searchIcon'
         className={showSearchBar ? 'show' : ''}
-        src={import.meta.env.VITE_BASE_URL + "public/assets/images/search.png"}
+        src={import.meta.env.VITE_BASE_URL + "assets/images/search.png"}
         alt="search icon"
         onClick={handleShowSearchBar} />
     </>

@@ -13,7 +13,7 @@ const MainContainer = styled.div<Props>`
   max-width: 2000px;
   padding: 20px 40px;
   background-color: ${(props) => props.$dark === 'true' ? '#081d35' : '#4186D3'};
-  background-image: url(${import.meta.env.VITE_BASE_URL + 'public/assets/images/background.jpg'});
+  background-image: url(${import.meta.env.VITE_BASE_URL + 'assets/images/background.jpg'});
   background-size: cover;
   background-attachment: fixed;
   background-position: center;
