@@ -23,7 +23,7 @@ describe('it tests PasswordInput component', () =>{
     expect(input).toBeDefined();
     const eye = screen.getByAltText('Hide password') as HTMLImageElement;
     expect(eye).toBeDefined();
-    expect(eye?.src).toBe(import.meta.env.VITE_BASE_URL + 'public/assets/images/hide.png');
+    expect(eye?.src).toBe(import.meta.env.VITE_BASE_URL + 'assets/images/hide.png');
   });
   
   it('needs to change eye to hide and input type to text', async () =>{
@@ -42,9 +42,9 @@ describe('it tests PasswordInput component', () =>{
     );
     const input = screen.getByPlaceholderText(placeholder) as HTMLInputElement;
     const eye = screen.getByAltText('Hide password') as HTMLImageElement;
-    expect(eye.src).toBe(import.meta.env.VITE_BASE_URL + 'public/assets/images/hide.png');
+    expect(eye.src).toBe(import.meta.env.VITE_BASE_URL + 'assets/images/hide.png');
     await userEvent.click(eye);
-    expect(eye.src).toBe(import.meta.env.VITE_BASE_URL + 'public/assets/images/eye.png');
+    expect(eye.src).toBe(import.meta.env.VITE_BASE_URL + 'assets/images/eye.png');
     expect(input.type).toBe('text');
   });
 

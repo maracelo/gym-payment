@@ -20,8 +20,8 @@ describe('it tests Footer component', () =>{
   });
 
   it('needs to has right img', () =>{
-    expect(githubLinkImg.src).toBe(import.meta.env.VITE_BASE_URL + "public/assets/images/github-mark.png");
-    expect(linkedinLinkImg.src).toBe(import.meta.env.VITE_BASE_URL + "public/assets/images/linkedin_mark.png");
+    expect(githubLinkImg.src).toBe(import.meta.env.VITE_BASE_URL + "assets/images/github-mark.png");
+    expect(linkedinLinkImg.src).toBe(import.meta.env.VITE_BASE_URL + "assets/images/linkedin_mark.png");
   });
   
   it('needs to has right href', () =>{
