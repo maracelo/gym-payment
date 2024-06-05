@@ -69,8 +69,9 @@ function Header(){
   const logedPage = () =>{
     const arr = location.href.split('/');
     const route = arr[arr.length - 1];
+    const notLogedRoutes = ['login', 'register', 'serverout'];
 
-    return route === 'login' || route === 'register' || route === 'serverout' ? false : true;
+    return notLogedRoutes.includes(route) ? false : true;
   };
 
   const handleLogout = () =>{
