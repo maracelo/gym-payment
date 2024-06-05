@@ -87,7 +87,7 @@ function Header(){
       </Link>
       <nav>
         {logedPage() && <SearchBar/>}
-        <Dark onClick={handleTheme} src={import.meta.env.VITE_BASE_URL + `public/assets/images/${dark ? 'dark' : 'light'}.png`} />
+        <Dark onClick={handleTheme} src={import.meta.env.VITE_BASE_URL + `assets/images/${dark ? 'dark' : 'light'}.png`} />
         {logedPage() && loading &&
           <div className='loading' data-testid="loading"></div>
         }
